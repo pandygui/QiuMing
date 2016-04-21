@@ -2,7 +2,7 @@ package com.softprogram;
 /*
  * 帖子模块*/
 public class Post {
-	public void CreatePost(){}//创建帖子
+	public void createPost(){}//创建帖子
 	public void viewPost(){}//查看帖子
 	public void modigyPost(){}//修改帖子
 	public void collectionPost(){}//收藏帖子
