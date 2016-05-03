@@ -1,161 +1,1 @@
-CREATE TABLE `user` (
-`id` integer NOT NULL AUTO_INCREMENT,
-`username` varchar(20) CHARACTER SET utf8 NOT NULL,
-`password` varchar(18) CHARACTER SET utf8 NOT NULL,
-`pickname` varchar(20) CHARACTER SET utf8 NULL COMMENT '昵称',
-`email` varchar(50) CHARACTER SET utf8 NULL DEFAULT '' COMMENT '邮箱',
-`telephone` varchar(20) CHARACTER SET utf8 NULL DEFAULT '0',
-`age` int NULL DEFAULT 0,
-`address` varchar(200) CHARACTER SET utf8 NULL DEFAULT '秋名山',
-`experience` integer NULL DEFAULT 0 COMMENT '用户经验值',
-`sex` varchar(6) CHARACTER SET utf8 NULL DEFAULT '秀吉' COMMENT '用户性别',
-`role_id` integer NULL DEFAULT 0 COMMENT '用户角色码',
-`introduction` varchar(200) CHARACTER SET utf8 NULL DEFAULT '这个人太懒了，一句话也没有写' COMMENT '个人简介',
-PRIMARY KEY (`id`) 
-)
-DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci;
-
-CREATE TABLE `user_role` (
-`id` integer NOT NULL AUTO_INCREMENT COMMENT '角色码',
-`role_name` varchar(20) CHARACTER SET utf8 NOT NULL DEFAULT '普通用户' COMMENT '用户角色名称',
-PRIMARY KEY (`id`) 
-)
-DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci;
-
-CREATE TABLE `post` (
-`id` integer NOT NULL AUTO_INCREMENT,
-`user_id` integer NOT NULL COMMENT '用户 id',
-`title` varchar(100) CHARACTER SET utf8 NOT NULL COMMENT '帖子标题',
-`content` varchar(5000) CHARACTER SET utf8 NOT NULL DEFAULT '# 帖子不能为空' COMMENT '保存 markdown 格式的帖子',
-`praise_number` integer NULL DEFAULT 0 COMMENT '获赞数',
-`favorite_number` integer NULL DEFAULT 0 COMMENT '被收藏数',
-`time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '发帖时间',
-`modify_time` datetime NULL COMMENT '最近修改时间',
-`state` int NULL COMMENT '帖子审核状态，0 ： 不通过，1 ： 通过',
-`post_role_id` integer NOT NULL DEFAULT 1 COMMENT '帖子元类型, 1 帖子 2 发车',
-PRIMARY KEY (`id`) 
-)
-DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci;
-
-CREATE TABLE `comment` (
-`id` integer NOT NULL AUTO_INCREMENT,
-`post_id` integer NOT NULL COMMENT '帖子 id',
-`content` varchar(200) CHARACTER SET utf8 NOT NULL DEFAULT '# 评论使用markdown' COMMENT '评论使用markdown @ 来处理用户提示的',
-`user_id` integer NOT NULL COMMENT '用户 id',
-`reciver_user_id` integer NULL COMMENT '如果为空，则默认是对帖子的回复',
-`time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '评论时间',
-PRIMARY KEY (`id`) 
-)
-DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci;
-
-CREATE TABLE `friend` (
-`id` integer NOT NULL AUTO_INCREMENT COMMENT '用户关系表 id',
-`user_id` integer NOT NULL COMMENT '用户id',
-`focus_user_id` integer NOT NULL COMMENT '用户关注的用户 id',
-`time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '关注时间',
-PRIMARY KEY (`id`) 
-)
-DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci;
-
-CREATE TABLE `favorite` (
-`id` integer NOT NULL AUTO_INCREMENT,
-`user_id` integer NOT NULL COMMENT '用户 id',
-`post_id` integer NOT NULL COMMENT '帖子 id',
-`favorite_name` varchar(20) CHARACTER SET utf8 NOT NULL DEFAULT '默认收藏夹' COMMENT '收藏夹名字',
-`time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '收藏时间',
-PRIMARY KEY (`id`) 
-)
-DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci;
-
-CREATE TABLE `letter` (
-`id` integer NOT NULL AUTO_INCREMENT,
-`receive_user_id` integer NOT NULL COMMENT '本条私信的接受用户',
-`sender_user_id` integer NOT NULL COMMENT '发送私信的用户',
-`content` varchar(200) CHARACTER SET utf8 NOT NULL COMMENT '私信内容',
-`time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '私信时间',
-`read` int NULL DEFAULT 0 COMMENT '本私信是否已读， 0 未读， 1 已读',
-PRIMARY KEY (`id`) 
-)
-DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci;
-
-CREATE TABLE `post_role` (
-`id` integer NOT NULL AUTO_INCREMENT,
-`post_role_name` varchar(30) CHARACTER SET utf8 NULL COMMENT '帖子元类型',
-PRIMARY KEY (`id`) 
-)
-DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci;
-
-CREATE TABLE `praise` (
-`id` integer NOT NULL AUTO_INCREMENT,
-`user_id` integer NOT NULL COMMENT '用户 id',
-`post_id` integer NOT NULL COMMENT '帖子 id',
-`time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '点赞时间',
-PRIMARY KEY (`id`) 
-)
-DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci;
-
-CREATE TABLE `car_depart` (
-`id` integer NOT NULL AUTO_INCREMENT,
-`post_id` integer NOT NULL COMMENT '发车对应的帖子 id',
-`plate_number` integer NOT NULL COMMENT '车牌号码',
-`car_state` int NULL DEFAULT 1 COMMENT '发车状态。0 未发车，1 发车，2 发车完毕',
-PRIMARY KEY (`id`) 
-)
-DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci;
-
-CREATE TABLE `car_aboard` (
-`id` integer NOT NULL AUTO_INCREMENT,
-`user_id` integer NOT NULL COMMENT '用户 id',
-`car_id` integer NOT NULL COMMENT '发车编号',
-`time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-`state` int NOT NULL DEFAULT 1 COMMENT '上车状态,0 还未上车，1乘车，2下车',
-PRIMARY KEY (`id`) 
-)
-DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci;
-
-CREATE TABLE `tag` (
-`id` integer NOT NULL AUTO_INCREMENT,
-`user_id` integer NOT NULL COMMENT '创建标签的用户',
-`tag_name` varchar(10) CHARACTER SET utf8 NOT NULL COMMENT '标签名字',
-`post_id` integer NOT NULL COMMENT '被贴标签的帖子',
-`praise_number` integer NOT NULL COMMENT '赞同次数',
-`time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '贴标签时间',
-PRIMARY KEY (`id`) 
-)
-DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci;
-
-CREATE TABLE `complain` (
-`id` integer NOT NULL AUTO_INCREMENT COMMENT '举报编号',
-`post_id` integer NOT NULL COMMENT '被举报帖子id',
-`complain_time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '举报时间',
-`user_id` integer NOT NULL COMMENT '举报用户',
-`complain_reason` varchar(200) CHARACTER SET utf8 NOT NULL COMMENT '举报理由',
-`state` int NOT NULL DEFAULT 0 COMMENT '0:成功 1:失败',
-PRIMARY KEY (`id`) 
-)
-DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci;
-
-CREATE TABLE `tag_praise` (
-`id` integer NOT NULL AUTO_INCREMENT COMMENT '记录的id，插入前判断 tag_id 是否存在，然后在判断相同 tag_id 的情况下 parise_user_id 是否唯一，如果增加一条记录，就会去找到 tag_id 然后让其 support_number 加一',
-`tag_id` integer NOT NULL COMMENT '哪个标签',
-`praise_user_id` integer NOT NULL COMMENT '点赞的用户',
-`time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '点赞的时间',
-PRIMARY KEY (`id`) 
-)
-DEFAULT CHARACTER SET=utf8 COLLATE=utf8_general_ci;
-
-
-ALTER TABLE `post` ADD CONSTRAINT `articles_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
-ALTER TABLE `comment` ADD CONSTRAINT `posts_id_comments_id` FOREIGN KEY (`post_id`) REFERENCES `post` (`id`);
-ALTER TABLE `friend` ADD CONSTRAINT `friend_ship_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
-ALTER TABLE `favorite` ADD CONSTRAINT `collection_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
-ALTER TABLE `letter` ADD CONSTRAINT `letter_sender_user_id` FOREIGN KEY (`sender_user_id`) REFERENCES `user` (`id`);
-ALTER TABLE `praise` ADD CONSTRAINT `praise_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
-ALTER TABLE `car_depart` ADD CONSTRAINT `car_post_id` FOREIGN KEY (`post_id`) REFERENCES `post` (`id`);
-ALTER TABLE `car_aboard` ADD CONSTRAINT `aboard_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
-ALTER TABLE `tag` ADD CONSTRAINT `tag_post_id` FOREIGN KEY (`post_id`) REFERENCES `post` (`id`);
-ALTER TABLE `complain` ADD CONSTRAINT `complain_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`);
-ALTER TABLE `tag_praise` ADD CONSTRAINT `praise_tag_id` FOREIGN KEY (`tag_id`) REFERENCES `tag` (`id`);
-ALTER TABLE `post` ADD CONSTRAINT `post_role_id` FOREIGN KEY (`post_role_id`) REFERENCES `post_role` (`id`);
-ALTER TABLE `user` ADD CONSTRAINT `user_role_id` FOREIGN KEY (`role_id`) REFERENCES `user_role` (`id`);
-alter table user add unique key (`username`);
+/*Navicat MySQL Data TransferSource Server         : localhost_3306Source Server Version : 50540Source Host           : localhost:3306Source Database       : qiuming_testTarget Server Type    : MYSQLTarget Server Version : 50540File Encoding         : 65001Date: 2016-05-03 16:28:46*/SET FOREIGN_KEY_CHECKS=0;-- ------------------------------ Table structure for `car_aboard`-- ----------------------------DROP TABLE IF EXISTS `car_aboard`;CREATE TABLE `car_aboard` (  `id` int(11) NOT NULL AUTO_INCREMENT,  `userId` int(11) NOT NULL COMMENT '用户 id',  `carId` int(11) NOT NULL COMMENT '发车编号',  `time` datetime NOT NULL,  `state` int(11) NOT NULL DEFAULT '1' COMMENT '上车状态,0 还未上车，1乘车，2下车',  PRIMARY KEY (`id`),  KEY `aboard_user_id` (`userId`)) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;-- ------------------------------ Records of car_aboard-- ----------------------------INSERT INTO `car_aboard` VALUES ('1', '5', '1', '0000-00-00 00:00:00', '2');-- ------------------------------ Table structure for `car_depart`-- ----------------------------DROP TABLE IF EXISTS `car_depart`;CREATE TABLE `car_depart` (  `id` int(11) NOT NULL AUTO_INCREMENT,  `postId` int(11) NOT NULL COMMENT '发车对应的帖子 id',  `plateNumber` int(11) NOT NULL COMMENT '车牌号码',  `carState` int(11) DEFAULT '1' COMMENT '发车状态。0 未发车，1 发车，2 发车完毕',  PRIMARY KEY (`id`),  KEY `car_post_id` (`postId`)) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;-- ------------------------------ Records of car_depart-- ----------------------------INSERT INTO `car_depart` VALUES ('1', '4', '0', '1');-- ------------------------------ Table structure for `comment`-- ----------------------------DROP TABLE IF EXISTS `comment`;CREATE TABLE `comment` (  `id` int(11) NOT NULL AUTO_INCREMENT,  `post_id` int(11) NOT NULL COMMENT '帖子 id',  `content` varchar(200) NOT NULL DEFAULT '# 评论使用markdown' COMMENT '评论使用markdown @ 来处理用户提示的',  `userId` int(11) NOT NULL COMMENT '用户 id',  `reciverUserId` int(11) DEFAULT NULL COMMENT '如果为空，则默认是对帖子的回复',  `time` datetime DEFAULT NULL COMMENT '评论时间',  PRIMARY KEY (`id`),  KEY `posts_id_comments_id` (`post_id`)) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;-- ------------------------------ Records of comment-- ----------------------------INSERT INTO `comment` VALUES ('1', '1', '自己评论自己的第一篇帖子', '1', null, null);INSERT INTO `comment` VALUES ('2', '1', '关荣的抢不到第一', '5', null, null);INSERT INTO `comment` VALUES ('3', '1', '我看了你的评论了', '1', '5', null);-- ------------------------------ Table structure for `complain`-- ----------------------------DROP TABLE IF EXISTS `complain`;CREATE TABLE `complain` (  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '举报编号',  `postId` int(11) NOT NULL COMMENT '被举报帖子id',  `complainTime` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '举报时间',  `userId` int(11) NOT NULL COMMENT '举报用户',  `complainReason` varchar(200) NOT NULL COMMENT '举报理由',  `state` int(11) NOT NULL DEFAULT '0' COMMENT '0:成功 1:失败',  PRIMARY KEY (`id`),  KEY `complain_user_id` (`userId`)) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;-- ------------------------------ Records of complain-- ----------------------------INSERT INTO `complain` VALUES ('1', '5', '2016-04-23 20:00:12', '5', '非发车帖子有番号', '0');-- ------------------------------ Table structure for `favorite`-- ----------------------------DROP TABLE IF EXISTS `favorite`;CREATE TABLE `favorite` (  `id` int(11) NOT NULL AUTO_INCREMENT,  `userId` int(11) NOT NULL COMMENT '用户 id',  `postId` int(11) NOT NULL COMMENT '帖子 id',  `favoriteName` varchar(20) NOT NULL DEFAULT '默认收藏夹' COMMENT '收藏夹名字',  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '收藏时间',  PRIMARY KEY (`id`),  KEY `collection_user_id` (`userId`)) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;-- ------------------------------ Records of favorite-- ----------------------------INSERT INTO `favorite` VALUES ('1', '1', '1', '默认收藏夹', '2016-04-23 18:01:58');-- ------------------------------ Table structure for `friend`-- ----------------------------DROP TABLE IF EXISTS `friend`;CREATE TABLE `friend` (  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '用户关系表 id',  `userId` int(11) NOT NULL COMMENT '用户id',  `focusUserId` int(11) NOT NULL COMMENT '用户关注的用户 id',  `time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '关注时间',  PRIMARY KEY (`id`),  KEY `friend_ship_user_id` (`userId`)) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;-- ------------------------------ Records of friend-- ----------------------------INSERT INTO `friend` VALUES ('1', '5', '1', '2016-04-24 12:49:51');-- ------------------------------ Table structure for `letter`-- ----------------------------DROP TABLE IF EXISTS `letter`;CREATE TABLE `letter` (  `id` int(11) NOT NULL AUTO_INCREMENT,  `receiveUserId` int(11) NOT NULL COMMENT '本条私信的接受用户',  `senderUserId` int(11) NOT NULL COMMENT '发送私信的用户',  `content` varchar(200) NOT NULL COMMENT '私信内容',  `time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '私信时间',  `read` int(11) NOT NULL DEFAULT '0' COMMENT '0 未读， 1 已读',  PRIMARY KEY (`id`),  KEY `letter_sender_user_id` (`senderUserId`)) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;-- ------------------------------ Records of letter-- ----------------------------INSERT INTO `letter` VALUES ('1', '1', '1', '系统私信：{user_id} 在 {post_id} 评论了', '2016-04-23 20:19:03', '0');INSERT INTO `letter` VALUES ('2', '1', '1', '系统私信：{user_id} 关注了你', '2016-04-24 12:50:33', '0');INSERT INTO `letter` VALUES ('3', '5', '1', '谢谢关注我', '2016-04-24 12:51:18', '0');-- ------------------------------ Table structure for `post`-- ----------------------------DROP TABLE IF EXISTS `post`;CREATE TABLE `post` (  `id` int(11) NOT NULL AUTO_INCREMENT,  `userId` int(11) NOT NULL COMMENT '用户 id',  `title` varchar(100) NOT NULL COMMENT '帖子标题',  `content` varchar(5000) NOT NULL DEFAULT '# 帖子不能为空' COMMENT '保存 markdown 格式的帖子',  `praiseNumber` int(11) DEFAULT '0' COMMENT '获赞数',  `favoriteNumber` int(11) DEFAULT '0' COMMENT '被收藏数',  `time` timestamp NULL DEFAULT CURRENT_TIMESTAMP COMMENT '发帖时间',  `modifyTime` datetime DEFAULT NULL COMMENT '最近修改时间',  `state` int(11) DEFAULT NULL COMMENT '帖子审核状态，0 ： 不通过，1 ： 通过',  `postRoleId` int(11) NOT NULL DEFAULT '1' COMMENT '帖子元类型',  PRIMARY KEY (`id`),  KEY `articles_user_id` (`userId`),  KEY `post_role_id` (`postRoleId`)) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;-- ------------------------------ Records of post-- ----------------------------INSERT INTO `post` VALUES ('1', '1', '本站第一个帖子', '# 本站第一个帖子\n番号: ibw-518z, ibw-218。', '1', '1', '2016-04-23 17:52:57', null, null, '0');INSERT INTO `post` VALUES ('3', '1', '本站第三个帖子', '# 本站第三个帖子\n番号 ibw-518z。', '0', '0', '2016-04-23 19:56:16', null, null, '0');INSERT INTO `post` VALUES ('4', '1', '本站第一个发车', '# 秋名山老司机第一发\n番号 ibw-518z。', '0', '0', '2016-04-24 13:12:27', null, null, '0');-- ------------------------------ Table structure for `post_role`-- ----------------------------DROP TABLE IF EXISTS `post_role`;CREATE TABLE `post_role` (  `id` int(11) NOT NULL AUTO_INCREMENT,  `postRoleName` varchar(30) DEFAULT NULL COMMENT '帖子元类型',  PRIMARY KEY (`id`)) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;-- ------------------------------ Records of post_role-- ----------------------------INSERT INTO `post_role` VALUES ('1', '帖子');INSERT INTO `post_role` VALUES ('2', '发车');-- ------------------------------ Table structure for `praise`-- ----------------------------DROP TABLE IF EXISTS `praise`;CREATE TABLE `praise` (  `id` int(11) NOT NULL AUTO_INCREMENT,  `userId` int(11) NOT NULL COMMENT '用户 id',  `postId` int(11) NOT NULL COMMENT '帖子 id',  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '点赞时间',  PRIMARY KEY (`id`),  KEY `praise_user_id` (`userId`)) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;-- ------------------------------ Records of praise-- ----------------------------INSERT INTO `praise` VALUES ('1', '1', '1', '2016-04-23 18:13:38');-- ------------------------------ Table structure for `tag`-- ----------------------------DROP TABLE IF EXISTS `tag`;CREATE TABLE `tag` (  `id` int(11) NOT NULL AUTO_INCREMENT,  `userId` int(11) NOT NULL COMMENT '创建标签的用户',  `tagName` varchar(10) NOT NULL COMMENT '标签名字',  `postId` int(11) NOT NULL COMMENT '被贴标签的帖子',  `praiseNumber` int(11) NOT NULL COMMENT '赞同次数',  `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '贴标签时间',  PRIMARY KEY (`id`),  KEY `tag_post_id` (`postId`)) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;-- ------------------------------ Records of tag-- ----------------------------INSERT INTO `tag` VALUES ('1', '1', '第一发', '1', '0', '2016-04-23 18:06:10');-- ------------------------------ Table structure for `tag_praise`-- ----------------------------DROP TABLE IF EXISTS `tag_praise`;CREATE TABLE `tag_praise` (  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '记录的id，插入前判断 tag_id 是否存在，然后在判断相同 tag_id 的情况下 parise_user_id 是否唯一，如果增加一条记录，就会去找到 tag_id 然后让其 support_number 加一',  `tagId` int(11) NOT NULL COMMENT '哪个标签',  `praiseUserId` int(11) NOT NULL COMMENT '点赞的用户',  `time` datetime NOT NULL COMMENT '点赞的时间',  PRIMARY KEY (`id`),  KEY `praise_tag_id` (`tagId`)) ENGINE=MyISAM DEFAULT CHARSET=utf8;-- ------------------------------ Records of tag_praise-- ------------------------------ ------------------------------ Table structure for `user`-- ----------------------------DROP TABLE IF EXISTS `user`;CREATE TABLE `user` (  `id` int(11) NOT NULL AUTO_INCREMENT,  `username` varchar(20) NOT NULL,  `password` varchar(18) NOT NULL,  `pickname` varchar(20) DEFAULT NULL COMMENT '昵称',  `email` varchar(50) DEFAULT NULL COMMENT '邮箱',  `telephone` varchar(20) DEFAULT NULL,  `age` int(11) DEFAULT NULL,  `address` varchar(200) DEFAULT '秋名山',  `experience` int(11) DEFAULT '0' COMMENT '用户经验值',  `sex` varchar(6) DEFAULT '秀吉' COMMENT '用户性别',  `roleId` int(11) DEFAULT NULL COMMENT '用户角色码',  `introduction` varchar(200) DEFAULT '这个人太懒了，一句话也没有写' COMMENT '个人简介',  PRIMARY KEY (`id`),  UNIQUE KEY `username` (`username`),  KEY `user_role_id` (`roleId`)) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;-- ------------------------------ Records of user-- ----------------------------INSERT INTO `user` VALUES ('1', 'admin', 'admin', '女仆酱', 'qyvlik@qq.com', null, '16', '秋名山', '1', '女', '3', '这个人太懒了，一句话也没有写');INSERT INTO `user` VALUES ('5', 'qyvlik', '1403085871', null, null, null, null, '秋名山', '0', '秀吉', null, '这个人太懒了，一句话也没有写');INSERT INTO `user` VALUES ('6', 'test', 'password', 'pickname', 'email@qq.com', '123456', '1', '秋名山', '0', '秀吉', null, '这个是个人简介');INSERT INTO `user` VALUES ('9', '老王', '123456789', '又是一个云老王', 'laowang@qiuming.moe', '0800092000', '20', '秋名山下水道', '0', '男', '1', '谁家娇妻守空房，我住隔壁我姓王');-- ------------------------------ Table structure for `user_role`-- ----------------------------DROP TABLE IF EXISTS `user_role`;CREATE TABLE `user_role` (  `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '角色码',  `roleName` varchar(20) NOT NULL DEFAULT '普通用户' COMMENT '用户角色名称',  PRIMARY KEY (`id`)) ENGINE=MyISAM AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;-- ------------------------------ Records of user_role-- ----------------------------INSERT INTO `user_role` VALUES ('1', '普通用户');INSERT INTO `user_role` VALUES ('2', '管理员');INSERT INTO `user_role` VALUES ('3', '超级管理员');

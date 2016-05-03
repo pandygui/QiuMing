@@ -110,17 +110,17 @@ UPDATE `user` SET `password` = 'password' WHERE username = 'test';
 ~~4. 是否要审核（不要了）~~
 
 ```
-INSERT INTO post(user_id, title, content) VALUES(1, '本站第一个帖子', '# 本站第一个帖子\n番号 ibw-518z。');
+INSERT INTO post(userId, title, content) VALUES(1, '本站第一个帖子', '# 本站第一个帖子\n番号 ibw-518z。');
 ```
 
 #### 查看帖子
 
-1. 输入 post_id
+1. 输入 postId
 
 2. 查询
 
 ```
-SELECT content, title from post where post_id = post_id;
+SELECT content, title from post where postId = postId;
 ```
 
 #### 修改帖子
@@ -133,45 +133,45 @@ UPDATE post SET title = '本站第一个帖子',
 
 #### 收藏帖子
 
-1. user_id, post_id
+1. userId, postId
 
 2. 写入 favorite 。
 
-3. 设置 post where post_id = 1 的 favorite_number
+3. 设置 post where postId = 1 的 favorite_number
 
 ```
-INSERT INTO favorite(user_id, post_id) VALUES(1, 1);
-UPDATE post SET favorite_number = favorite_number + 1
+INSERT INTO favorite(userId, postId) VALUES(1, 1);
+UPDATE post SET favoriteNumber = favoriteNumber + 1
             WHERE id = 1;
 ```
 
 #### 帖子贴标签
 
-1. user_id, post_id, tagName
+1. userId, postId, tagName
 
 2. 写入 tag
 
 ```
-INSERT INTO tag (user_id, post_id, tag_name) VALUES(1, 1, '第一发'); -- 贴标签
+INSERT INTO tag (userId, postId, tagName) VALUES(1, 1, '第一发'); -- 贴标签
 ```
 
 #### 点赞帖子
 
-1. user_id, post_id
+1. userId, postId
 
 2. 写入 praise
 
-3. 修改 post where post_id = 1 的 praise_number
+3. 修改 post where postId = 1 的 praise_number
 
 ```
-INSERT INTO praise (user_id, post_id) VALUES(1, 1);
+INSERT INTO praise (userId, postId) VALUES(1, 1);
 UPDATE post SET praise_number = praise_number + 1
             WHERE id = 1;
 ```
 
 #### 删除帖子
 
-1. post_id
+1. postId
 
 ```
 DELETE FROM post WHERE id=2;
@@ -179,19 +179,19 @@ DELETE FROM post WHERE id=2;
 
 #### 举报帖子
 
-1. user_id, post_id, reason
+1. userId, postId, reason
 
 2. 写入 complain
 
 ```
-INSERT INTO complain (user_id, post_id, complain_reason) VALUES(5, 5, '非发车帖子有番号');
+INSERT INTO complain (userId, postId, complain_reason) VALUES(5, 5, '非发车帖子有番号');
 ```
 
 ### 评论模块
 
 #### 评论帖子
 
-1. user_id, post_id, content
+1. userId, postId, content
 
 2. 写入 comment
 
@@ -200,15 +200,15 @@ INSERT INTO complain (user_id, post_id, complain_reason) VALUES(5, 5, '非发车
 4. 如果是自己评论自己则不发送私信
 
 ```
-INSERT INTO `comment` (user_id, post_id, content) VALUES(1, 1, '自己评论自己的第一篇帖子');
-INSERT INTO `comment` (user_id, post_id, content) VALUES(5, 1, '关荣的抢不到第一');
-INSERT INTO `letter` (receive_user_id, sender_user_id, content) 
-              VALUES (1, 1, '系统私信：{user_id} 在 {post_id} 评论了');
+INSERT INTO `comment` (userId, postId, content) VALUES(1, 1, '自己评论自己的第一篇帖子');
+INSERT INTO `comment` (userId, postId, content) VALUES(5, 1, '关荣的抢不到第一');
+INSERT INTO `letter` (receiveUserId, senderUserId, content) 
+              VALUES (1, 1, '系统私信：{userId} 在 {postId} 评论了');
 ```
 
 #### 回复评论
 
-1. user_id, post_id, content, reciver_user_id
+1. userId, postId, content, reciverUserId
 
 2. 写入 comment
 
@@ -217,15 +217,15 @@ INSERT INTO `letter` (receive_user_id, sender_user_id, content)
 4. 如果是自己评论自己则不发送私信
 
 ```
-INSERT INTO `comment` (user_id, post_id, reciver_user_id, content) 
+INSERT INTO `comment` (userId, postId, reciverUserId, content) 
                 VALUES(1, 1, 5, '我看了你的评论了');
-INSERT INTO `letter` (receive_user_id, sender_user_id, content) 
-              VALUES (5, 1, '系统私信：{user_id} 在 {post_id}回复了您的评论了');
+INSERT INTO `letter` (receiveUserId, senderUserId, content) 
+              VALUES (5, 1, '系统私信：{userId} 在 {postId}回复了您的评论了');
 ```
 
 #### 查看评论
 
-1. post_id
+1. postId
 
 2. LIMIT 10 分页方式查看评论
 
@@ -233,41 +233,41 @@ INSERT INTO `letter` (receive_user_id, sender_user_id, content)
 
 #### 发车
 
-1. 申请发车，获取到 post_id
+1. 申请发车，获取到 postId
 
-2. post_id, user_id, content, 手动帖子 车牌号
+2. postId, userId, content, 手动帖子 车牌号
 
-3. 发车，获取到 car_id
+3. 发车，获取到 carId
 
 ```
-INSERT INTO post(user_id, title, content, post_role_id) VALUES(1, '本站第一个发车', '# 秋名山老司机第一发\n番号 ibw-518z。', 2);
-INSERT INTO car_depart(post_id, plate_number) VALUES(4, '秋 ibw-518z')
+INSERT INTO post(userId, title, content, post_roleId) VALUES(1, '本站第一个发车', '# 秋名山老司机第一发\n番号 ibw-518z。', 2);
+INSERT INTO car_depart(postId, plate_number) VALUES(4, '秋 ibw-518z')
 ```
 
 #### 上车
 
-1. 搜索车牌号，选择 post_id
+1. 搜索车牌号，选择 postId
 
-2. user_id, car_id
+2. userId, carId
 
-3. 写入 car_aboard 前检查是否已经上传， 检查 car_aboard state 字段
+3. 写入 carAboard 前检查是否已经上传， 检查 carAboard state 字段
 
 > **注意**：只能上车一次，下车后才可上其他车
 
 ```
 -- check
-INSERT INTO car_aboard (user_id, car_id) VALUES(5, 1);
+INSERT INTO carAboard (userId, carId) VALUES(5, 1);
 ```
 
 #### 下车
 
-1. 通过 user_id 遍历 car_aboard 
+1. 通过 userId 遍历 carAboard 
 
 2. 设置 state 字段
 
 ```
-UPDATE car_aboard SET state = 2 
-                  WHERE user_id = 5;
+UPDATE carAboard SET state = 2 
+                  WHERE userId = 5;
 ```
 
 #### 设置上车权限
@@ -278,24 +278,24 @@ UPDATE car_aboard SET state = 2
 
 #### 关注
 
-1. user_id, focus_user_id
+1. userId, focusUserId
 
 2. 写入 friend
 
-3. 系统私信通知 focus_user_id
+3. 系统私信通知 focusUserId
 
 ```
-INSERT INTO friend (user_id, focus_user_id) VALUES(5, 1);
-INSERT INTO `letter` (receive_user_id, sender_user_id, content) 
-              VALUES (1, 1, '系统私信：{user_id} 关注了你');
+INSERT INTO friend (userId, focusUserId) VALUES(5, 1);
+INSERT INTO `letter` (receiveUserId, senderUserId, content) 
+              VALUES (1, 1, '系统私信：{userId} 关注了你');
 ```
 
 ####  发送私信
 
-1. user_id, focus_user_id, content
+1. userId, focusUserId, content
 
 ```
-INSERT INTO `letter` (receive_user_id, sender_user_id, content) 
+INSERT INTO `letter` (receiveUserId, senderUserId, content) 
               VALUES (5, 1, '谢谢关注我');
 ```
 
