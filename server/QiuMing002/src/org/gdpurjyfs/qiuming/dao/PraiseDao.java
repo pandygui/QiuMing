@@ -6,6 +6,7 @@ import org.gdpurjyfs.qiuming.entity.Praise;
 import org.gdpurjyfs.qiuming.util.JDBCTools;
 import org.junit.Test;
 
+
 public class PraiseDao implements CommonDao {	
 	
 	public PraiseDao() {
@@ -60,6 +61,12 @@ public class PraiseDao implements CommonDao {
 		} else {
 			return CommentDao.ENTITY_FAIL;
 		}
+	}
+	
+	public String delete(long userId, long postId) {
+		String sql = "delete from praise where userId = ? and postId = ? ;";
+		Object[] args = { userId, postId };
+		return JDBCTools.update(JDBCTools.getConnect(), sql, args);
 	}
 
 	@Override

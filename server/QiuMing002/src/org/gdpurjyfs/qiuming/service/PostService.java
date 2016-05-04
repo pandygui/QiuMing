@@ -1,5 +1,9 @@
 package org.gdpurjyfs.qiuming.service;
 
+import java.util.List;
+
+import org.gdpurjyfs.qiuming.dao.CommentDao;
+import org.gdpurjyfs.qiuming.dao.CommonDao;
 import org.gdpurjyfs.qiuming.dao.ComplainDao;
 import org.gdpurjyfs.qiuming.dao.PostDao;
 import org.gdpurjyfs.qiuming.dao.PraiseDao;
@@ -12,15 +16,18 @@ import org.gdpurjyfs.qiuming.entity.Praise;
 import org.gdpurjyfs.qiuming.entity.Tag;
 import org.gdpurjyfs.qiuming.entity.TagPraise;
 import org.gdpurjyfs.qiuming.entity.User;
-
 import org.gdpurjyfs.qiuming.entity.Favorite;
 import org.gdpurjyfs.qiuming.dao.FavoriteDao;
 
+@SuppressWarnings("unused")
 public class PostService {
 	/*
 	 * 创建帖子 查看帖子 修改帖子 收藏帖子 点赞帖子 删除帖子 举报帖子 帖子贴标签 赞同帖子的标签
 	 */
 
+	private PostDao postDao = new PostDao();
+	private PraiseDao praiseDao = new PraiseDao();
+	
 	private Post post;
 	private User user;
 
@@ -28,28 +35,26 @@ public class PostService {
 	private String favoriteName; // 收藏夹名称
 	private String complainReason; // 举报理由
 
-	// TODO 创建帖子
-	public String createPost() {
-		PostDao postDao = new PostDao();
-		String result = (String) postDao.create(this.getPost());
-		return result;
+	public List<Post> getUserPostList(User user, long index, long size) {
+		return postDao.getPostList(user.getId(), index, size);
+	}
+	
+	// 创建帖子
+	public String createPost(Post post) {
+		// userId title content
+		return (String) postDao.create(post);
+	}
+	
+	// 查看帖子
+	public Post viewPost(long postId) {
+		return (Post) postDao.findById(postId);
+	}
+	
+	// 修改帖子
+	public String modifyPost(Post post) {
+		return (String) postDao.update(post);
 	}
 
-	// TODO 查看帖子
-	public String viewPost() {
-		PostDao postDao = new PostDao();
-		// Post result = (Post)
-		postDao.findById(this.getPost().getId());
-		return "";
-	}
-
-	// TODO 修改帖子
-	public String modifyPost() {
-		PostDao postDao = new PostDao();
-		// Post result = (Post)
-		postDao.update(this.getPost());
-		return "";
-	}
 
 	// TODO 收藏帖子
 	public String favoritePost() {
@@ -66,32 +71,33 @@ public class PostService {
 		return "";
 	}
 
-	// TODO 点赞帖子
-	// ! NOTE: 点赞或者取消赞
-	public String parisePost() {
+	// 点赞帖子
+	public String parisePost(long userId, long postId) {
 		// 1. 获取帖子 id
 		// 2. 获取浏览此帖子用户的 id
-		// 3. 向 Praise 写入记录
-		PraiseDao praiseDao = new PraiseDao();
-		Praise praise = new Praise();
-
-		praise.setPostId(this.getPost().getId());
-		praise.setUserId(this.getUser().getId());
-		praiseDao.create(praise);
-
-		return "";
+		// 3. 向 Praise 写入记录		
+		
+		String result = (String) praiseDao.create(new Praise(postId, userId));
+		if(result.equals(CommonDao.SUCCESS)) {
+			return postDao.addPraiseNumber(postId);
+		} else {
+			return result;
+		}
+	}
+	
+	// 取消赞
+	public String unparisePost(long userId, long postId) {
+		String result = praiseDao.delete(userId, postId);
+		if(result.equals(CommonDao.SUCCESS)) {
+			return postDao.subPraiseNumber(postId);
+		} else {
+			return result;
+		}
 	}
 
 	// TODO 删除帖子
-	public String deletePost() {
-		// 1. 获取 帖子 id
-		// 2. 查询是否存在
-		// 3. 删除
-		PostDao postDao = new PostDao();
-		if (postDao.findById(this.getPost().getId()) != null) {
-			postDao.delete(this.getPost().getId());
-		}
-		return "";
+	public String deletePost(long postId) {
+		return (String) postDao.delete(postId);
 	}
 
 	// TODO 举报帖子
@@ -149,20 +155,20 @@ public class PostService {
 		// 4. 向 TagPraise 写入记录
 		// 5. 修改 Tag 的 praiseNumber 字段
 		
-		TagDao tagDao = new TagDao();
-		Tag tag = (Tag)tagDao.findByTagName(this.getPost().getId(), this.getTagName());
-		if(tag != null) {
-			TagPraiseDao tagPraiseDao = new TagPraiseDao();
-			
-			TagPraise tagPraise = new TagPraise();
-			tagPraise.setPraiseUserId(this.getUser().getId());
-			tagPraise.setTagId(tag.getId());
-			
-			tagPraiseDao.create(tagPraise);
-			// 判断是赞同还是取消赞同
-			tag.setPraiseNumber(tag.getPraiseNumber() + 1);
-			tagDao.update(tag);
-		}
+		// TagDao tagDao = new TagDao();
+		// Tag tag = (Tag)tagDao.findByTagName(this.getPost().getId(), this.getTagName());
+//		if(tag != null) {
+//			TagPraiseDao tagPraiseDao = new TagPraiseDao();
+//			
+//			TagPraise tagPraise = new TagPraise();
+//			tagPraise.setPraiseUserId(this.getUser().getId());
+//			tagPraise.setTagId(tag.getId());
+//			
+//			tagPraiseDao.create(tagPraise);
+//			// 判断是赞同还是取消赞同
+//			tag.setPraiseNumber(tag.getPraiseNumber() + 1);
+//			tagDao.update(tag);
+//		}
 		return "";
 	}
 

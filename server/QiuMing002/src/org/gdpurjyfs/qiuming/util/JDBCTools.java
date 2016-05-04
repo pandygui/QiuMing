@@ -3,10 +3,11 @@ package org.gdpurjyfs.qiuming.util;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Connection;
+import java.util.List;
 
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
-
+import org.apache.commons.dbutils.handlers.BeanListHandler;
 import org.gdpurjyfs.qiuming.dao.CommentDao;
 
 public final class JDBCTools {
@@ -18,25 +19,24 @@ public final class JDBCTools {
 	private static String password = "root";
 
 	public static boolean existByIds(Connection conn, String tableName,
-			String id1Name, String id2Name,
-			long id1, long id2) {		
+			String id1Name, String id2Name, long id1, long id2) {
 		return isUnique(conn, tableName, id1Name, id2Name, id1, id2);
 	}
-	
+
 	public static boolean isUnique(Connection conn, String tableName,
-			String arg1Name, String arg2Name,
-			Object arg1, Object arg2) {
+			String arg1Name, String arg2Name, Object arg1, Object arg2) {
 		if (conn == null) {
 			return false;
 		}
-		
+
 		QueryRunner qr = new QueryRunner();
 		String sql = "select * from " + tableName + " where " + arg1Name
 				+ " = ? and " + arg2Name + "=? ;";
 		Object[] args = { arg1, arg2 };
 
 		try {
-			return qr.query(conn, sql, new BeanHandler<Object>(Object.class), args) != null;
+			return qr.query(conn, sql, new BeanHandler<Object>(Object.class),
+					args) != null;
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return false;
@@ -44,17 +44,18 @@ public final class JDBCTools {
 			JDBCTools.close(conn);
 		}
 	}
-	
+
 	public static String modifyColumnById(Connection conn, String tableName,
 			String columnName, Object columnValue, long id) {
 		if (conn == null) {
 			return CommentDao.CONNECTION_FAIL;
 		}
-		
+
 		QueryRunner qr = new QueryRunner();
 		try {
 			// update tablename set columnName = columnValue where id = id
-			String sql = "update " + tableName + " set "+ columnName +" = ? where id = ?";
+			String sql = "update " + tableName + " set " + columnName
+					+ " = ? where id = ?";
 			Object[] args = { columnValue, id };
 			qr.update(conn, sql, args);
 		} catch (SQLException e) {
@@ -65,7 +66,7 @@ public final class JDBCTools {
 		}
 		return CommentDao.SUCCESS;
 	}
-	
+
 	public static String deleteById(Connection conn, String tableName, long id) {
 		if (conn == null) {
 			return CommentDao.CONNECTION_FAIL;
@@ -99,7 +100,6 @@ public final class JDBCTools {
 
 		try {
 			result = qr.query(conn, sql, new BeanHandler<T>(clazz), params);
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
@@ -129,7 +129,7 @@ public final class JDBCTools {
 		}
 		return CommentDao.SUCCESS;
 	}
-	
+
 	public static String create(Connection conn, String sql, Object[] args) {
 		if (conn == null) {
 			return CommentDao.CONNECTION_FAIL;
@@ -139,7 +139,7 @@ public final class JDBCTools {
 			qr.update(conn, sql, args);
 		} catch (SQLException e) {
 			e.printStackTrace();
-			
+
 			// 重复插入
 			if (e.getErrorCode() == 1062) {
 				return CommentDao.DUPLICATE;
@@ -150,6 +150,27 @@ public final class JDBCTools {
 			JDBCTools.close(conn);
 		}
 		return CommentDao.SUCCESS;
+	}
+
+	public static <T> List<T> getRecodeListById(Connection conn, String tableName,
+			String idName, long id, long index, long size, Class<T> clazz) {
+
+		QueryRunner qr = new QueryRunner();
+
+		// select * from post where userId = userid limit index, size;
+
+		String sql = "select * from " + tableName + " where " + idName
+				+ " = ? LIMIT ?, ? ;";
+		Object[] params = { id, index, size };
+
+		try {
+			return qr.query(conn, sql, new BeanListHandler<T>(clazz), params);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			JDBCTools.close(conn);
+		}
 	}
 
 	public static Connection getConnect() {

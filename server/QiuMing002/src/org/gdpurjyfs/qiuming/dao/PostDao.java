@@ -1,5 +1,6 @@
 package org.gdpurjyfs.qiuming.dao;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.sql.Connection;
 import java.util.Date;
@@ -12,6 +13,7 @@ import org.gdpurjyfs.qiuming.util.*;
 import org.junit.Test;
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.handlers.BeanHandler;
+import org.apache.commons.dbutils.handlers.BeanListHandler;
 
 @SuppressWarnings("unused")
 public class PostDao implements CommonDao {
@@ -61,16 +63,52 @@ public class PostDao implements CommonDao {
 		System.out.println(post.toString());
 	}
 	
+	@Test
+	public void testgetPostList() {
+		List<Post> posts = getPostList(1, 0, 10);
+		if(posts != null) {
+			System.out.println("get : " + posts.size());
+		}
+	}
+	
 	
 	//----------------------------------------------------------------------------
 
+	// 修改字段，赞数 praiseNumber
+	
+	public String addPraiseNumber(long postId) {
+		Post post = (Post) findById(postId);
+		if(post != null) {
+			long praiseNumber = post.getPraiseNumber() + 1;
+			return JDBCTools.modifyColumnById(JDBCTools.getConnect(), "post", "praiseNumber", praiseNumber, postId);
+		} else {
+			return CommonDao.NONE;
+		}
+	}
+	
+	public String subPraiseNumber(long postId) {
+		Post post = (Post) findById(postId);
+		if(post != null) {
+			long praiseNumber = post.getPraiseNumber() - 1;
+			praiseNumber = praiseNumber < 0 ? 0 : praiseNumber;
+			return JDBCTools.modifyColumnById(JDBCTools.getConnect(), "post", "praiseNumber", praiseNumber, postId);
+		} else {
+			return CommonDao.NONE;
+		}
+	}
+	
 	@Override
 	public Object create(Object entity) {
 		if (entity != null && entity instanceof Post) {
 			
 			Post post = (Post) entity;			
-			String sql = "INSERT INTO post(userId, title, content) VALUES(?, ?, ?)";
-			Object[] args = { post.getUserId(), post.getTitle(), post.getContent() };
+			String sql = "INSERT INTO post(userId, title, content,  modifyTime) VALUES(?, ?, ?, ?)";
+			Object[] args = {
+					post.getUserId(), 
+					post.getTitle(), 
+					post.getContent(),
+					new Timestamp(new Date().getTime())
+					};
 			
 			return JDBCTools.create(JDBCTools.getConnect(), sql, args);
 		} else {
@@ -112,6 +150,14 @@ public class PostDao implements CommonDao {
 	public Object findById(long id) {		
 		return JDBCTools.findById(JDBCTools.getConnect(), "post", id, Post.class);
 	}
+	
+	public List<Post> getPostList(long userId, long index, long size) {
+		return JDBCTools.getRecodeListById(JDBCTools.getConnect(), "post", 
+				"userId", userId,
+				index, size,
+				Post.class);
+	}
+	
 
 	@Override
 	public List<Object> findAll(Object... args) {

@@ -10,6 +10,11 @@ public class Praise {
 	
 	public Praise() {
 	}
+	
+	public Praise(long userId, long postId) {
+		this.userId = userId;
+		this.postId = postId;
+	}
 		
 	public long getId() {
 		return id;
