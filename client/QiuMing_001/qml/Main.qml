@@ -2,6 +2,7 @@ import VPlayApps 1.0
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.1
+import Qt.WebSockets 1.0
 
 import QtQuick.Dialogs 1.2 as ZZZ
 
@@ -41,14 +42,16 @@ App {
         Theme.listItem.activeTextColor = "#b06176";
         // activeTextColor
 
-//        // listItem ThemeSimpleRow
-//        Theme.listItem.textColor = "#ababab";
-//        // Theme.listItem.activeTextColor = "#ababab";
-//        // 详细的文字要白一点
-//        Theme.listItem.detailTextColor = "#b06176";
-//        Theme.listItem.backgroundColor = "#343434";
-//        Theme.listItem.selectedBackgroundColor = "#5c5c5c";
-//        Theme.listItem.dividerColor = "#434343";
+        //        // listItem ThemeSimpleRow
+        //        Theme.listItem.textColor = "#ababab";
+        //        // Theme.listItem.activeTextColor = "#ababab";
+        //        // 详细的文字要白一点
+        //        Theme.listItem.detailTextColor = "#b06176";
+        //        Theme.listItem.backgroundColor = "#343434";
+        //        Theme.listItem.selectedBackgroundColor = "#5c5c5c";
+        //        Theme.listItem.dividerColor = "#434343";
+
+        Theme.colors.inputCursorColor = "#b06176"
 
     }
 
@@ -56,6 +59,7 @@ App {
     property alias mainNavigation: mainNavigation
     property alias lazyer: lazyer
     property alias userEntity: userEntity
+    property alias socket: socket
 
     UserEntity {
         id: userEntity
@@ -70,10 +74,14 @@ App {
 
     Lazyer { id: lazyer }
 
+    Socket { id: socket }
+
     Component.onCompleted: {
-        //        if(!userEntity.isLogin) {
-        //            mainNavigationStack.push(userLoginPage)
-        //        }
+        mainNavigationStack.push(userLoginPage);
+
+        lazyer.lazyDo(250, function() {
+            socket.active = true;
+        });
     }
 
     NavigationStack {
@@ -106,6 +114,7 @@ App {
 
             Component {
                 id: userLoginPage
+                // socket
                 UserLoginPage {  }
             }
 
