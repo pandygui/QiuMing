@@ -40,6 +40,7 @@ App {
         Theme.navigationAppDrawer.textColor = "#ababab";
         Theme.navigationAppDrawer.activeTextColor = "#b06176"
         Theme.listItem.activeTextColor = "#b06176";
+        Theme.listItem.backgroundColor = "transparent";
         // activeTextColor
 
         //        // listItem ThemeSimpleRow
@@ -51,8 +52,13 @@ App {
         //        Theme.listItem.selectedBackgroundColor = "#5c5c5c";
         //        Theme.listItem.dividerColor = "#434343";
 
-        Theme.colors.inputCursorColor = "#b06176"
+        // 输入框
+        Theme.colors.inputCursorColor = "#b06176";
 
+        // 选项栏
+        Theme.tabBar.titleColor = "#b06176"; //"#ababab";
+        Theme.tabBar.backgroundColor = "#343434";
+        Theme.tabBar.dividerColor = "#434343";
     }
 
     property alias mainStack: mainNavigationStack

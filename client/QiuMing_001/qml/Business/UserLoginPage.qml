@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.1
 
 
 Page {
+    id: page
     backNavigationEnabled: false
 
     Column {
@@ -12,8 +13,23 @@ Page {
         anchors.margins: dp(10)
         spacing: dp (10)
 
-        Image {
-            source: "../../assets/login-001.png"
+        RowLayout {
+            width: parent.width
+            Image {
+                height: page.width * 0.3
+                width: page.width * 0.3
+                sourceSize: Qt.size(page.width * 0.3, page.width * 0.3)
+                Layout.alignment: Qt.AlignLeft
+                source: password.activeFocus ? "../../assets/login/left-mask.png" : "../../assets/login/left.png"
+            }
+            Item { Layout.fillWidth: true }
+            Image {
+                height: page.width * 0.3
+                width: page.width * 0.3
+                sourceSize: Qt.size(page.width * 0.3, page.width * 0.3)
+                Layout.alignment: Qt.AlignRight
+                source: password.activeFocus ? "../../assets/login/right-mask.png" : "../../assets/login/right.png"
+            }
         }
 
         AppTextField {
@@ -64,8 +80,11 @@ Page {
                 var __loginHandle = function (messageObj) {
                     if(messageObj["result"] === "SUCCESS") {
                         console.log("登陆成功");
+                        // console.log("messageObj: \n"+JSON.stringify(messageObj));
 
-                        console.log("messageObj: \n"+JSON.stringify(messageObj));
+                        //! 这里返回一些必要的数据
+
+                        userEntity.set(messageObj["user"]);
 
                         busyDialog.close();
                         mainStack.pop();
@@ -85,6 +104,11 @@ Page {
                         busyDialog.close();
                     });
                 }
+
+                var __err = function(message) {
+                    busyDialog.title = message;
+                }
+
                 if(username.text == "") {
                     busyDialog.title = "用户名不能为空";
                     return;
@@ -97,7 +121,8 @@ Page {
 
                 socket.login(username.text,
                              password.text,
-                             __loginHandle);
+                             __loginHandle,
+                             __err);
             }
         }
     }

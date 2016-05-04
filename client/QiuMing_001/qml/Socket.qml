@@ -55,6 +55,10 @@ Item {
     // callable(messageObj)
     // err(messageObj)
     function send(action, callable, err) {
+        if(webSocket.active === false) {
+            webSocket.active = true;
+        }
+
         action = action || {};
         callable = callable || function(messageObj) {
             console.log(JSON.stringify(messageObj));
@@ -90,6 +94,87 @@ Item {
             "password": password,
             "action": "login"
         }
+        send(action, callable, err);
+    }
+
+    //    function enterUserCenter(userId, callable, err) {
+    //        callable = callable || function(messageObj) {
+    //            console.log(JSON.stringify(messageObj));
+    //        };
+    //        err = err || function(message) {
+    //            console.log(message)
+    //        };
+
+    //        var action = {
+    //            "action": "",
+    //            "userId": userId
+    //        };
+    //        send(action, callable, err);
+    //    }
+
+
+    // 由于用户登录了，是在服务端记录登陆状态的，所以在客户端只管发送请求
+    function getUserPostList(index, size, callable, err) {
+        callable = callable || function(messageObj) {
+            console.log(JSON.stringify(messageObj));
+        };
+        err = err || function(message) {
+            console.log(message)
+        };
+        var action = {
+            "action": "getUserPostList",
+            "index": index,
+            "size": size,
+        };
+        send(action, callable, err);
+    }
+
+    // 由于用户登录了，是在服务端记录登陆状态的，所以在客户端只管发送请求
+    // 点赞
+    function parisePost(postId) {
+        callable = callable || function(messageObj) {
+            console.log(JSON.stringify(messageObj));
+        };
+        err = err || function(message) {
+            console.log(message)
+        };
+        var action = {
+            "action": "parisePost",
+            "postId": postId,
+        };
+        send(action, callable, err);
+    }
+
+    // 由于用户登录了，是在服务端记录登陆状态的，所以在客户端只管发送请求
+    // 取消赞
+    function unparisePost(postId) {
+        callable = callable || function(messageObj) {
+            console.log(JSON.stringify(messageObj));
+        };
+        err = err || function(message) {
+            console.log(message)
+        };
+        var action = {
+            "action": "unparisePost",
+            "postId": postId,
+        };
+        send(action, callable, err);
+    }
+
+    // 由于用户登录了，是在服务端记录登陆状态的，所以在客户端只管发送请求
+    // 创建帖子
+    function createPost(title, content, callable, err) {
+        callable = callable || function(messageObj) {
+            console.log(JSON.stringify(messageObj));
+        };
+        err = err || function(message) {
+            console.log(message)
+        };
+        var action = {
+            "action": "createPost",
+            "title": title,
+            "content": content,
+        };
         send(action, callable, err);
     }
 

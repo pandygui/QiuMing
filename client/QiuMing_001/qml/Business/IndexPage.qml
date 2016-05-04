@@ -9,17 +9,17 @@ ListPage {
 
     // 必须是 ListModel
 
-    model: ListModel {
-        ListElement {
-            text: "Widget test"
-            detailText: "Some of the widgets available in V-Play AppSDK"
-            image: "../../../assets/user_head.jpg"
-        }
-        ListElement { text: "Shown are:"
-            detailText: "ListPage, NavigationBar with different items, Switch"
-            image: "../../../assets/user_head.jpg"
-        }
-    }
+//    model: ListModel {
+//        ListElement {
+//            text: "Widget test"
+//            detailText: "Some of the widgets available in V-Play AppSDK"
+//            image: "../../../assets/user_head.jpg"
+//        }
+//        ListElement { text: "Shown are:"
+//            detailText: "ListPage, NavigationBar with different items, Switch"
+//            image: "../../../assets/user_head.jpg"
+//        }
+//    }
 
     //    model: [
     //        { text: "Widget test",

@@ -2,7 +2,7 @@ import QtQuick 2.0
 
 QtObject {
     id: userEntity
-    property string user_id
+    property string userId
     property string username
     property string password
     property string pickname
@@ -12,8 +12,21 @@ QtObject {
     property string address
     property string experience
     property string sex
-    property int role_id
+    property int roleId
     property string role_name
     property string introduction
+
+    function set(user) {
+        for(var iter in user) {
+            console.log("iter: "+iter)
+            if(iter === "id") {
+                userEntity["userId"] = user[iter];
+                // console.debug('userEntity["userId"]:' +  userEntity["userId"])
+            } else {
+                userEntity[iter] = user[iter];
+                // console.debug('userEntity['+iter+']:' +  userEntity[iter])
+            }
+        }
+    }
 }
 
