@@ -5,6 +5,7 @@ import QtQuick.Layouts 1.1
 import QtQml.Models 2.2
 
 import "../Component"
+import "./delegate"
 
 Page {
     id: page
@@ -60,72 +61,27 @@ Page {
 
             ListPage {
                 model: postItem.posts
-                delegate: Rectangle {
-                    color: "transparent"
-                    border.color: "#ccc"
-                    border.width: 1
+                delegate: PostItemDelegate {
                     id: itemDelegate
 
-                    property var    item                : modelData
-                    property string content             : item && item.content
-                    property string favoriteNumber      : item && item.favoriteNumber
-                    property string postId              : item && item.id
-                    property string praiseNumber        : item && item.praiseNumber
-                    property string roleId              : item && item.roleId
-                    property string postState           : item && item.state
-                    property string time                : item && item.time
-                    property string title               : item && item.title
-                    property string userId              : item && item.userId
-                    property string modifyTime          : item && item.modifyTime           //
-
                     width: parent.width
-
-                    height: column.childrenRect.height
-
-                    Column {
-                        id: column
-                        width: parent.width
-                        spacing: dp(5)
-                        AppText {
-                            width: parent.width
-                            text: itemDelegate.title
-                            elide: Text.ElideRight
-                        }
-
-                        AppText {
-                            width: parent.width
-                            // 显示前 20 个字符
-                            text: itemDelegate.content.substring(0, 20)
-                            elide: Text.ElideRight
-                        }
-
-                        AppText {
-                            width: parent.width
-                            text: itemDelegate.time
-                            elide: Text.ElideRight
-                        }
+                    onClicked: {
+                        console.log("post id:"+itemDelegate.postId);
+                        var properties = {
+                            "author"        : itemDelegate.userId,
+                            "content"       : itemDelegate.content,
+                            "pariseNumber"  : itemDelegate.praiseNumber,
+                            "postId"        : itemDelegate.postId,
+                            "title"         : itemDelegate.title,
+                            "favoriteNumber": itemDelegate.favoriteNumber,
+                            "time"          :itemDelegate.time,
+                            "modifyTime"    :itemDelegate.modifyTime,
+                            "postState"     :itemDelegate.postState,
+                            "roleId"        :itemDelegate.roleId,
+                        };
+                        mainStack.push(postViewPageCom, properties );
                     }
-
-                    RippleMouseArea {
-                        anchors.fill: parent
-                        onClicked: {
-                            console.log("post id:"+itemDelegate.postId);
-                            var properties = {
-                                "author"        : itemDelegate.userId,
-                                "content"       : itemDelegate.content,
-                                "pariseNumber"  : itemDelegate.praiseNumber,
-                                "postId"        : itemDelegate.postId,
-                                "title"         : itemDelegate.title,
-                                "favoriteNumber": itemDelegate.favoriteNumber,
-                                "time"          :itemDelegate.time,
-                                "modifyTime"    :itemDelegate.modifyTime,
-                                "postState"     :itemDelegate.postState,
-                                "roleId"        :itemDelegate.roleId,
-                            };
-                            mainStack.push(postViewPageCom, properties );
-                        }
-                    }
-                } // itemDelegate
+                }  // itemDelegate
 
                 Component {
                     id: postViewPageCom

@@ -21,8 +21,6 @@ App {
 
     // ZZZ.ColorDialog {  visible: true }
 
-    property color color: "#434343"
-
     // Theme {}
     onInitTheme: {
         // 设置主字体颜色
@@ -66,6 +64,8 @@ App {
     property alias lazyer: lazyer
     property alias userEntity: userEntity
     property alias socket: socket
+
+    signal loginSuccess()
 
     UserEntity {
         id: userEntity
@@ -121,7 +121,7 @@ App {
             Component {
                 id: userLoginPage
                 // socket
-                UserLoginPage {  }
+                UserLoginPage { onLoginSuccess: app.loginSuccess(); }
             }
 
             Component {
@@ -164,10 +164,34 @@ App {
                     }
                 } // headerView
 
+                footerView: AppButton {
+                    text: "logout"
+                    onClicked: {
+                        mainNavigation.drawer.close();
+                        socket.logout(userEntity.username);
+                        mainNavigationStack.push(userLoginPage);
+                        lazyer.lazyDo(100, function(){
+                            socket.active = false;
+                            lazyer.lazyDo(100, function(){
+                                socket.active = true;
+                            });
+                        })
+                    }
+                } // footerView
+
                 NavigationItem {
                     title: qsTr("首页")
                     icon: IconType.home
-                    IndexPage { }
+                    IndexPage {
+                        id: indexPage
+                        Connections {
+                            target: app
+                            onLoginSuccess: {
+                                indexPage.loadPosts(indexPage.postIndex,
+                                                    indexPage.postsSize);
+                            }
+                        }
+                    }
                 }
 
                 NavigationItem {

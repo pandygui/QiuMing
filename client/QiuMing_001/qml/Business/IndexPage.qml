@@ -3,56 +3,57 @@ import VPlayApps 1.0
 import QtQuick 2.0
 import QtQuick.Layouts 1.1
 
+import "./delegate"
+
 ListPage {
+    id: page
     backNavigationEnabled: true
     emptyText.text: qsTr("首页")
 
-    // 必须是 ListModel
+    property int postIndex: 0
+    property int postsSize: 10
 
-//    model: ListModel {
-//        ListElement {
-//            text: "Widget test"
-//            detailText: "Some of the widgets available in V-Play AppSDK"
-//            image: "../../../assets/user_head.jpg"
-//        }
-//        ListElement { text: "Shown are:"
-//            detailText: "ListPage, NavigationBar with different items, Switch"
-//            image: "../../../assets/user_head.jpg"
-//        }
-//    }
+    delegate: PostItemDelegate {
+        id: itemDelegate
 
-    //    model: [
-    //        { text: "Widget test",
-    //            detailText: "Some of the widgets available in V-Play AppSDK",
-    //            icon: IconType.tablet,
-    //            image: "../../../assets/user_head.jpg" },
-    //        { text: "Shown are:",
-    //            detailText: "ListPage, NavigationBar with different items, Switch",
-    //            icon: IconType.question,
-    //            image: "../../../assets/user_head.jpg" }
-    //    ]
-
-
-    //        // listItem ThemeSimpleRow
-    //        Theme.listItem.textColor = "#ababab";
-    //        // Theme.listItem.activeTextColor = "#ababab";
-    //        // 详细的文字要白一点
-    //        Theme.listItem.detailTextColor = "#b06176";
-    //        Theme.listItem.backgroundColor = "#343434";
-    //        Theme.listItem.selectedBackgroundColor = "#5c5c5c";
-    //        Theme.listItem.dividerColor = "#434343";
-
-
-    delegate: SimpleRow {
-        style: StyleSimpleRow {
-            textColor : "#ababab";
-            activeTextColor : "#ababab";
-            // 详细的文字要白一点
-            detailTextColor : "#ababab";
-            backgroundColor : "#343434";
-            selectedBackgroundColor : "#5c5c5c";
-            dividerColor : "#434343";
+        width: parent.width
+        onClicked: {
+            console.log("post id:"+itemDelegate.postId);
+            var properties = {
+                "author"        : itemDelegate.userId,
+                "content"       : itemDelegate.content,
+                "pariseNumber"  : itemDelegate.praiseNumber,
+                "postId"        : itemDelegate.postId,
+                "title"         : itemDelegate.title,
+                "favoriteNumber": itemDelegate.favoriteNumber,
+                "time"          :itemDelegate.time,
+                "modifyTime"    :itemDelegate.modifyTime,
+                "postState"     :itemDelegate.postState,
+                "roleId"        :itemDelegate.roleId,
+            };
+            mainStack.push(postViewPageCom, properties );
         }
+    }  // itemDelegate
+
+    Component {
+        id: postViewPageCom
+        PostViewPage { }
     }
+
+    function loadPosts(postIndex, postsSize) {
+        var _getPosts = function(messageObj) {
+            if(messageObj["result"] === "SUCCESS") {
+                page.model = messageObj["posts"];
+                console.log("装载成功：length", messageObj["posts"].length, "postIndex:",postIndex, "postsSize:", postsSize)
+            } else {
+                console.debug("装载失败：", JSON.stringify(messageObj));
+            }
+        }
+        // 在整个帖子表中获取指定 index 和 size
+        socket.getPostList(postIndex,
+                           postsSize,
+                           _getPosts);
+    }
+
 }
 

@@ -107,6 +107,22 @@ Item {
         send(action, callable, err);
     }
 
+    // 用户登出
+    function logout(username, callable, err) {
+        console.debug("action logout")
+        callable = callable || function(messageObj) {
+            console.log(JSON.stringify(messageObj));
+        };
+        err = err || function(message) {
+            console.log(message)
+        };
+        var action = {
+            "action": "logout",
+            "username": username,
+        }
+        send(action, callable, err);
+    }
+
     //    function enterUserCenter(userId, callable, err) {
     //        callable = callable || function(messageObj) {
     //            console.log(JSON.stringify(messageObj));
@@ -133,6 +149,21 @@ Item {
         };
         var action = {
             "action": "getUserPostList",
+            "index": index,
+            "size": size,
+        };
+        send(action, callable, err);
+    }
+
+    function getPostList(index, size, callable, err) {
+        callable = callable || function(messageObj) {
+            console.log(JSON.stringify(messageObj));
+        };
+        err = err || function(message) {
+            console.log(message)
+        };
+        var action = {
+            "action": "getPostList",
             "index": index,
             "size": size,
         };

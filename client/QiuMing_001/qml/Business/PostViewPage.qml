@@ -40,15 +40,26 @@ Page {
 
             flickableItem.interactive: true
             flickableItem.boundsBehavior: Flickable.StopAtBounds
-            Item {
-                width: parent.width
-                height: contentView.contentHeight
+            Rectangle {
+                // width: textEdit.height > page.height * 0.9 ? page.width : page.width - dp(16)
+                width: scrollView.width
+                height: contentView.height
+                color: "#434343"
                 AppText {
                     id: contentView
-                    width: parent.width
+
+                    anchors.top: parent.top
+                    anchors.topMargin: dp(16)
+                    anchors.horizontalCenter: parent.horizontalCenter
+
+                    width: page.width - 2 * dp(16)
+                    height: Math.max(contentView.contentHeight, postViewPage.height * 0.9)
+                    wrapMode: TextEdit.WrapAnywhere
+
                     elide: Text.ElideNone
-                    wrapMode: Text.WrapAtWordBoundaryOrAnywhere
                     text: postViewPage.content
+                    verticalAlignment: TextEdit.AlignTop
+
                 }
             }
         }
@@ -68,22 +79,24 @@ Page {
 
                 Row {
                     IconButton {
-                        id: check
+                        id: parise
                         anchors.verticalCenter: parent.verticalCenter
                         toggle: true
                         icon: IconType.hearto
                         selectedIcon: IconType.heart
-                        onToggled: {
+                        onClicked: {
                             // 已经点赞过了
                             var _pariseHandle = function(messageObj) {
                                 if(messageObj["result"] === "SUCCESS") {
                                     pariseNumber = messageObj["pariseNumber"];
                                     __pariseThisPost = true;
 
+
                                 } else {
                                     console.debug("pariseHandle 出错");
                                     console.debug(JSON.stringify(messageObj))
                                 }
+                                parise.selected = __pariseThisPost;
                             };
 
                             // 还没有点赞过
@@ -95,6 +108,7 @@ Page {
                                     console.debug("unpariseHandle 出错");
                                     console.debug(JSON.stringify(messageObj))
                                 }
+                                parise.selected = __pariseThisPost;
                             };
 
                             if(__pariseThisPost) {
@@ -119,12 +133,16 @@ Page {
     Component.onCompleted: {
         // 传入的是当前使用应用的用户 id
         // 本页面的 postId
-        var _handle = function(messageObj){
 
+        // 检查用户师是否点赞，并且自动更新 pariseNumber
+        var _handle = function(messageObj){
+            // pariseNumber = messageObj["pariseNumber"];
             if(messageObj["result"] === "SUCCESS") {
                 // 已经点赞过
                 __pariseThisPost = true;
-                console.log("已经点赞过了");
+                pariseNumber = messageObj["pariseNumber"];
+                console.log("已经点赞过了", messageObj["pariseNumber"]);
+
             } else if(messageObj["result"] === "NONE") {
                 // 还未点赞过
                 __pariseThisPost = false;
@@ -135,6 +153,8 @@ Page {
                 __pariseThisPost = false;
                 console.log("服务器出错了。");
             }
+
+            parise.selected = __pariseThisPost;
         };
         socket.checkUserParisePost(userEntity.userId, postId, _handle);
     }

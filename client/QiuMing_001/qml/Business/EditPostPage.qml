@@ -15,41 +15,67 @@ Page {
     Item {
         anchors.fill: parent
 
-        ScrollView {
-            id: scrollView
+        ColumnLayout {
+//            width: parent.width
+//            height: parent.height
+
             anchors.fill: parent
             anchors.bottomMargin: dp(48)
 
-            horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
-            // verticalScrollBarPolicy: Qt.ScrollBarAlwaysOff
+            spacing: dp(6)
 
-            flickableItem.interactive: true
-            flickableItem.boundsBehavior: Flickable.StopAtBounds
+            AppTextField {
+                id: titleEdit
+                Layout.fillWidth: true
+                Layout.rightMargin: dp(16)
+                Layout.leftMargin: dp(16)
+                placeholderText: qsTr("请输入标题")
+            }
 
             Rectangle {
-                // width: textEdit.height > page.height * 0.9 ? page.width : page.width - dp(16)
-                width: scrollView.width
-                height: textEdit.height
-                color: "#434343"
+                Layout.fillWidth: true
+                Layout.rightMargin: dp(16)
+                Layout.leftMargin: dp(16)
+                height: dp(1)
+                color: "#ccc"
+            }
 
-                AppTextEdit {
-                    id: textEdit
-                    focus: true
+            ScrollView {
+                id: scrollView
+                Layout.fillWidth: true
+                Layout.fillHeight: true
 
-                    anchors.top: parent.top
-                    anchors.topMargin: dp(16)
-                    anchors.horizontalCenter: parent.horizontalCenter
+                horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
+                // verticalScrollBarPolicy: Qt.ScrollBarAlwaysOff
 
-                    width: page.width - 2 * dp(16)
-                    height: Math.max(textEdit.contentHeight, page.height * 0.9)
-                    wrapMode: TextEdit.WrapAnywhere
+                flickableItem.interactive: true
+                flickableItem.boundsBehavior: Flickable.StopAtBounds
 
-                    selectByMouse: true
-                    color: "#ababab"
-                    verticalAlignment: TextEdit.AlignTop
+                Rectangle {
+                    // width: textEdit.height > page.height * 0.9 ? page.width : page.width - dp(16)
+                    width: scrollView.width
+                    height: textEdit.height
+                    color: "#434343"
+
+                    AppTextEdit {
+                        id: textEdit
+                        focus: true
+
+                        anchors.top: parent.top
+                        anchors.topMargin: dp(16)
+                        anchors.horizontalCenter: parent.horizontalCenter
+
+                        width: page.width - 2 * dp(16)
+                        height: Math.max(textEdit.contentHeight, page.height * 0.9)
+                        wrapMode: TextEdit.WrapAnywhere
+
+                        selectByMouse: true
+                        color: "#ababab"
+                        verticalAlignment: TextEdit.AlignTop
+                    }
                 }
             }
-        }
+        } // ColumnLayout
 
         Rectangle {
             id: editBar
@@ -75,10 +101,10 @@ Page {
                         }
 
                         // TODO
-                        if(textEdit.text != "") {
-                            socket.createPost("title",textEdit.text, __handle);
+                        if(textEdit.text != "" && titleEdit.text != "") {
+                            socket.createPost(titleEdit.text,textEdit.text, __handle);
                         } else {
-                            console.log("")
+                            console.debug("标题或者内容为空");
                         }
                     }
                 }
