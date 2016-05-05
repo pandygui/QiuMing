@@ -1,150 +1,150 @@
 package org.gdpurjyfs.qiuming.action;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+
+import org.gdpurjyfs.qiuming.api.WebSocketClient;
+import org.gdpurjyfs.qiuming.dao.CommonDao;
+import org.gdpurjyfs.qiuming.entity.Post;
+import org.gdpurjyfs.qiuming.entity.Praise;
+import org.gdpurjyfs.qiuming.service.PostService;
+import org.gdpurjyfs.qiuming.service.UserService;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 
 public class PostAction {
-	/*
-	 * 创建帖子 
-	 * 查看帖子 
-	 * 修改帖子 
-	 * 收藏帖子 
-	 * 点赞帖子 
-	 * 删除帖子 
-	 * 举报帖子
-	 * 帖子贴标签 
-	 * 赞同帖子的标签 
-	 */
 	
-	private long userId;
-	private long postId;
-
-
-	private String title;
-	private String content;
-	private int state; // TODO
-	private Date time;
+	private UserService userService = new UserService();
+	private PostService postService = new PostService();
 	
-	private long viewUserId;
-	private String tag;
-	private String favoriteName;			// 收藏夹名称
+	// 创建帖子
+	public void createPost(JSONObject action, WebSocketClient client) {
+		String title = (String) action.get("title");
+		String content = (String) action.get("content");
+		HashMap<String, Object> obj = new HashMap<String, Object>();
 
-	// TODO 创建帖子 
-	public String createPost() {
+		obj.put("uuid", action.getString("uuid"));
 
-		return "";
-	}
+		if (client.getUser() != null) {
+			String result = postService.createPost(new Post(client.getUser()
+					.getId(), title, content));
+			if (result.equals(CommonDao.SUCCESS)) {
 
-	// TODO 查看帖子 
-	public String viewPost() {
-		return "";
-	}
-	
-	// TODO 修改帖子 
-	public String modifyPost() {
-		return "";
-	}
-	
-	// TODO 收藏帖子 
-	public String favoritePost() {
-		return "";
-	}
-	
-	// TODO 点赞帖子 
-	//! NOTE: 点赞或者取消赞	
-	public String parisePost() {
-		return "";
-	}
-	
-	// TODO 删除帖子 
-	public String deletePost() {
-		return "";
-	}
-	
-	// TODO 举报帖子
-	public String complainPost() {
-		return "";
-	}
-	
-	// TODO 帖子贴标签
-	public String tagPost() {
-		return "";
-	}
-	
-	// TODO 赞同帖子的标签 
-	public String parisePostTag() {
-		return "";
+				obj.put("result", "SUCCESS");
+				obj.put("code", "0");
+				// TODO 这里要设置
+				obj.put("postId", "");
+				client.sendMessage(JSON.toJSONString(obj));
+				return;
+			}
+		}
+		obj.put("result", "ERROR");
+		obj.put("code", "-1");
+		obj.put("message", "请登录后操作");
+		client.sendMessage(JSON.toJSONString(obj));
 	}
 
-	//--------------------------------------------------------------
-	
-	public long getUserId() {
-		return userId;
+	// 取消帖子
+	public void unparisePost(JSONObject action, WebSocketClient client) {
+		System.out.println("action unparisePost");
+		HashMap<String, Object> obj = new HashMap<String, Object>();
+		long postId = action.getLongValue("postId");
+		obj.put("uuid", action.getString("uuid"));
+		obj.put("postId", postId);
+
+		if (client.getUser() != null) {
+
+			long userId = client.getUser().getId();
+
+			String result = postService.unparisePost(userId, postId);
+			obj.put("result", result);
+
+			if (!result.equals(CommonDao.SUCCESS)) {
+				obj.put("code", "-2");
+				obj.put("message", "取消赞失败");
+			}
+
+		} else {
+			obj.put("result", "ERROR");
+			obj.put("code", "-1");
+			obj.put("message", "请登录后操作");
+		}
+
+		obj.put("pariseNumber", postService.getPostPariseNumber(postId));
+		client.sendMessage(JSON.toJSONString(obj));
 	}
 
-	public void setUserId(long userId) {
-		this.userId = userId;
-	}
+	// 点赞帖子
+	public void parisePost(JSONObject action, WebSocketClient client) {
+		System.out.println("action parisePost");
+		HashMap<String, Object> obj = new HashMap<String, Object>();
 
-	public String getTitle() {
-		return title;
-	}
+		long postId = action.getLongValue("postId");
+		obj.put("uuid", action.getString("uuid"));
+		obj.put("postId", postId);
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
+		if (client.getUser() != null) {
+			long userId = client.getUser().getId();
 
-	public String getContent() {
-		return content;
-	}
+			String result = postService.parisePost(userId, postId);
+			obj.put("result", result);
 
-	public void setContent(String content) {
-		this.content = content;
-	}
+			if (!result.equals(CommonDao.SUCCESS)) {
+				obj.put("code", "-2");
+				obj.put("message", "点赞帖子");
+			}
+		} else {
+			obj.put("result", "ERROR");
+			obj.put("code", "-1");
+			obj.put("message", "请登录后操作");
+		}
 
-	public int getState() {
-		return state;
-	}
-
-	public void setState(int state) {
-		this.state = state;
+		obj.put("pariseNumber", postService.getPostPariseNumber(postId));
+		client.sendMessage(JSON.toJSONString(obj));
 	}
 	
-	public Date getTime() {
-		return time;
-	}
+	// 获取全部帖子指定下标开始，size 大的帖子列表
+	public void getPostList(JSONObject action, WebSocketClient client) {
+		
+		long index = action.getLongValue("index");
+		long size = action.getLongValue("size");
+		
+		HashMap<String, Object> obj = new HashMap<String, Object>();
+		
+		obj.put("uuid", action.getString("uuid"));
+		obj.put("result", "SUCCESS");
+		obj.put("code", "0");
+		
+		System.out.println("action getPostList index: "+index+", size:"+size);
+		
+		List<Post> posts = postService.getPostList(index, size);
+		
+		obj.put("posts", posts);
+		
+		System.out.println("action getPostList posts size: "+posts.size());
 
-	public void setTime(Date time) {
-		this.time = time;
-	}
-	public long getViewUserId() {
-		return viewUserId;
-	}
-
-	public void setViewUserId(long viewUserId) {
-		this.viewUserId = viewUserId;
-	}
-
-	public String getTag() {
-		return tag;
-	}
-
-	public void setTag(String tag) {
-		this.tag = tag;
+		client.sendMessage(JSON.toJSONString(obj));
 	}
 	
-	public long getPostId() {
-		return postId;
-	}
+	// 检查用户是否点赞了某篇帖子
+	public void checkUserParisePost(JSONObject action, WebSocketClient client) {
+		System.out.println("checkUserParisePost");
+		long userId = action.getLongValue("userId");
+		long postId = action.getLongValue("postId");
+		HashMap<String, Object> obj = new HashMap<String, Object>();
+		obj.put("uuid", action.getString("uuid"));
 
-	public void setPostId(long postId) {
-		this.postId = postId;
-	}
-
-	public String getFavoriteName() {
-		return favoriteName;
-	}
-
-	public void setFavoriteName(String favoriteName) {
-		this.favoriteName = favoriteName;
+		Praise parise = postService.checkUserParisePost(userId, postId);
+		if (parise != null) {
+			obj.put("result", CommonDao.SUCCESS);
+			obj.put("postId", action.getString("postId"));
+			obj.put("pariseNumber", postService.getPostPariseNumber(postId));
+		} else {
+			obj.put("result", CommonDao.NONE);
+			obj.put("postId", 0);
+		}
+		client.sendMessage(JSON.toJSONString(obj));
 	}
 }

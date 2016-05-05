@@ -1,151 +1,104 @@
 package org.gdpurjyfs.qiuming.action;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import org.gdpurjyfs.qiuming.api.WebSocketClient;
+import org.gdpurjyfs.qiuming.dao.CommonDao;
+import org.gdpurjyfs.qiuming.dao.UserDao;
+import org.gdpurjyfs.qiuming.entity.Post;
 import org.gdpurjyfs.qiuming.entity.User;
+import org.gdpurjyfs.qiuming.service.PostService;
 import org.gdpurjyfs.qiuming.service.UserService;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 
 public class UserAction {
 
-	/*
-	 * 用户注册 
-	 * 修改用户信息 
-	 * 修改密码 
-	 * 登陆
-	 */
-	private String username;
-	private String password;
-
-	private String pickname;
-	private String email;
-	private String telephone;
-	private int age;
-	private String address;
-	private String sex;
-	private String introduction;
-
-	private String newPassword;
+	private UserService userService = new UserService();
+	private PostService postService = new PostService();
 	
-	private UserService service = new UserService();
-
-	// TODO 修改用户信息
-	public String modifyInfo(User user) {
-		return service.modifyInfo(user);
-	}
-
-	// TODO 修改密码
-	public String modifyPassword() {
-		service.setUser(this.getUser());
-		return service.modifyPassword(this.getNewPassword());
-	}
-
-	// TODO 用户注册
-	public String register() {
-		service.setUser(this.getUser());
-		String result = service.register();
-		return result;
-	}
-
-	// TODO 用户登录
-	public String login() {
-		service.setUser(this.getUser());
-		String result = service.login();
-		return result;
-	}
-
-	private User getUser() {
+	// 登陆
+	// 这里要注意，校验用户登录情况
+	public void login(JSONObject action, WebSocketClient client) {
+		// System.out.println("ActionFilter.login");
 		User user = new User();
-		user.setAddress(this.getAddress());
-		user.setAge(this.getAge());
-		user.setEmail(this.getEmail());
-//		user.setExperience();
-		user.setIntroduction(this.getIntroduction());
-		user.setPassword(this.getPassword());
-		user.setPickname(this.getPickname());
-//		user.setRoleId();
-		user.setSex(this.getSex());
-		user.setTelephone(this.getTelephone());
-		user.setUsername(this.getUsername());		
-		return user;
+		String username = (String) action.get("username");
+		String password = (String) action.get("password");
+		user.setUsername(username);
+		user.setPassword(password);
+
+		String result = userService.login(user);
+
+		HashMap<String, Object> obj = new HashMap<String, Object>();
+
+		obj.put("uuid", action.getString("uuid"));
+		obj.put("result", result);
+
+		if (result == CommonDao.SUCCESS) {
+			obj.put("code", "0");
+			User loginUser = userService.getUserByName(username);
+			client.setUser(loginUser);
+			obj.put("user", loginUser);
+		} else if (result.equals(CommonDao.NONE)) {
+			obj.put("code", "1");
+		} else if (result.equals(UserDao.PASSWORD_FAIL)) {
+			obj.put("code", "2");
+		}
+		client.sendMessage(JSON.toJSONString(obj));
 	}
 	
-	//----------------------------------------------
+	// 登出
+	public void logout(JSONObject action, WebSocketClient client) {
+		System.out.println("action logout");
+		User user = client.getUser();
+
+		HashMap<String, Object> obj = new HashMap<String, Object>();
+		obj.put("uuid", action.getString("uuid"));
+
+		if (user != null) {
+			if (user.getUsername().equals(action.get("username"))) {
+				client.setUser(null);
+				obj.put("result", "SUCCESS");
+			} else {
+				obj.put("result", "ERROR");
+				obj.put("message", "用户名与服务端不符");
+			}
+		} else {
+			obj.put("result", "ERROR");
+			obj.put("message", "用户早已登出");
+		}
+		client.sendMessage(JSON.toJSONString(obj));
+	}
 	
-	public String getUsername() {
-		return username;
-	}
+	// 获取用户的指定下标开始，size 大的帖子列表
+	public void getUserPostList(JSONObject action, WebSocketClient client) {
 
-	public void setUsername(String username) {
-		this.username = username;
-	}
+		long index = action.getLongValue("index");
+		long size = action.getLongValue("size");
+		HashMap<String, Object> obj = new HashMap<String, Object>();
+		obj.put("uuid", action.getString("uuid"));
 
-	public String getPickname() {
-		return pickname;
+		if (client.getUser() != null) {
+			List<Post> posts = postService.getUserPostList(client.getUser(),
+					index, size);
+			if (posts != null) {
+				obj.put("result", "SUCCESS");
+				obj.put("code", "0");
+				obj.put("posts", posts);
+			} else {
+				obj.put("result", "SUCCESS");
+				obj.put("code", "0");
+				obj.put("posts", new ArrayList<Post>());
+			}
+		} else {
+			obj.put("result", "ERROR");
+			obj.put("code", "-1");
+			obj.put("message", "请登录后操作");
+		}
+		client.sendMessage(JSON.toJSONString(obj));
 	}
-
-	public void setPickname(String pickname) {
-		this.pickname = pickname;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
-	public String getTelephone() {
-		return telephone;
-	}
-
-	public void setTelephone(String telephone) {
-		this.telephone = telephone;
-	}
-
-	public int getAge() {
-		return age;
-	}
-
-	public void setAge(int age) {
-		this.age = age;
-	}
-
-	public String getAddress() {
-		return address;
-	}
-
-	public void setAddress(String address) {
-		this.address = address;
-	}
-
-	public String getSex() {
-		return sex;
-	}
-
-	public void setSex(String sex) {
-		this.sex = sex;
-	}
-
-	public String getIntroduction() {
-		return introduction;
-	}
-
-	public void setIntroduction(String introduction) {
-		this.introduction = introduction;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getNewPassword() {
-		return newPassword;
-	}
-
-	public void setNewPassword(String newPassword) {
-		this.newPassword = newPassword;
-	}
+	
 }
