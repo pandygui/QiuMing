@@ -63,7 +63,6 @@ Page {
                 anchors.fill: parent
                 anchors.rightMargin: dp(16)
                 anchors.leftMargin: dp(16)
-                spacing: 0
                 AppButton {
                     text: "发布"
                     onClicked: {

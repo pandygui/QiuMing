@@ -1,33 +1,43 @@
 import QtQuick 2.0
 import Qt.WebSockets 1.0
 import "./uuid.js" as UUID
+import "./Component"
 
 Item {
     id: socket
     readonly property alias webSocket: webSocket
     property alias active: webSocket.active
 
+    Lazyer { id: interLazyer }
+
     WebSocket {
         id: webSocket
         url: "ws://localhost:8080/QiuMing002/websocket"
 
         onStatusChanged: {
-            console.log(status)
             switch(status) {
             case WebSocket.Connecting :
-                console.debug("Connecting");
+                console.debug("WebSocket status : Connecting");
                 break;
             case WebSocket.Open :
-                console.debug("Open");
+                console.debug("WebSocket status : Open");
                 break;
             case WebSocket.Closing :
-                console.debug("Closing");
+                console.debug("WebSocket status : Closing");
                 break;
             case WebSocket.Closed :
-                console.debug("Closed");
+                console.debug("WebSocket status : Closed");
+                interLazyer.lazyDo(3*1000, function(){
+                    console.log("timeout and connect")
+                    webSocket.active = true;
+                })
                 break;
             case WebSocket.Error :
-                console.debug("Error");
+                console.debug("WebSocket status : Error");
+                interLazyer.lazyDo(3*1000, function(){
+                    console.log("timeout and connect")
+                    webSocket.active = true;
+                })
                 break;
             }
         }
@@ -37,7 +47,7 @@ Item {
         //        }
 
         onErrorStringChanged: {
-            console.log(errorString)
+            console.log("WebSocket error: "+errorString)
         }
 
         function sendText(message, err) {
@@ -131,7 +141,7 @@ Item {
 
     // 由于用户登录了，是在服务端记录登陆状态的，所以在客户端只管发送请求
     // 点赞
-    function parisePost(postId) {
+    function parisePost(postId, callable, err) {
         callable = callable || function(messageObj) {
             console.log(JSON.stringify(messageObj));
         };
@@ -147,7 +157,7 @@ Item {
 
     // 由于用户登录了，是在服务端记录登陆状态的，所以在客户端只管发送请求
     // 取消赞
-    function unparisePost(postId) {
+    function unparisePost(postId, callable, err) {
         callable = callable || function(messageObj) {
             console.log(JSON.stringify(messageObj));
         };
@@ -178,5 +188,22 @@ Item {
         send(action, callable, err);
     }
 
+    // 由于用户登录了，是在服务端记录登陆状态的，所以在客户端只管发送请求
+    // 检查用户是否点赞了某篇帖子
+    function checkUserParisePost(userId, postId, callable, err) {
+        console.debug("action : checkUserParisePost")
+        callable = callable || function(messageObj) {
+            console.log(JSON.stringify(messageObj));
+        };
+        err = err || function(message) {
+            console.log(message)
+        };
+        var action = {
+            "action": "checkUserParisePost",
+            "userId": userId,
+            "postId": postId,
+        };
+        send(action, callable, err);
+    }
 }
 

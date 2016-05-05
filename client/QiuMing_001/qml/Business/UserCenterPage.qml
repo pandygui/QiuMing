@@ -40,7 +40,7 @@ Page {
     Component.onCompleted: {
         socket.getUserPostList(0, 10,function(messageObj){
             if(messageObj["result"] === "SUCCESS") {
-                console.log(JSON.stringify(messageObj));
+                // console.debug(JSON.stringify(messageObj));
                 postItem.posts = messageObj["posts"];
             } else {
                 console.log(JSON.stringify(messageObj));
@@ -94,7 +94,8 @@ Page {
 
                         AppText {
                             width: parent.width
-                            text: itemDelegate.content
+                            // 显示前 20 个字符
+                            text: itemDelegate.content.substring(0, 20)
                             elide: Text.ElideRight
                         }
 

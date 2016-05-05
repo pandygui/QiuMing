@@ -18,7 +18,7 @@ QtObject {
 
     function set(user) {
         for(var iter in user) {
-            console.log("iter: "+iter)
+            // console.log("iter: "+iter)
             if(iter === "id") {
                 userEntity["userId"] = user[iter];
                 // console.debug('userEntity["userId"]:' +  userEntity["userId"])
