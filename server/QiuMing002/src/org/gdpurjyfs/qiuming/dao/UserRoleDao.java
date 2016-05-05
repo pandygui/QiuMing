@@ -23,7 +23,7 @@ public class UserRoleDao implements CommonDao {
 	
 	@Test
 	public void testdelete() {
-		System.out.println(delete(4));
+		System.out.println(delete(7));
 	}
 	//----------------------------------------------------------------------------
 	

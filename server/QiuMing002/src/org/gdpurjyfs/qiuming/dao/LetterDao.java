@@ -26,7 +26,7 @@ public class LetterDao implements CommonDao {
 	
 	@Test
 	public void testdelete() {
-		String result = (String) delete(5);
+		String result = (String) delete(7);
 		if (result != null) {
 			System.out.println(result.toString());
 		} else {

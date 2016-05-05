@@ -13,7 +13,7 @@ import org.gdpurjyfs.qiuming.dao.CommentDao;
 public final class JDBCTools {
 
 	private static String driveClassName = "com.mysql.jdbc.Driver";
-	private static String url = "jdbc:mysql://localhost:3306/qiuming_test";
+	private static String url = "jdbc:mysql://localhost:3306/qiuming_test?userUnicode=true&characterEncoding=UTF8";
 
 	private static String user = "root";
 	private static String password = "root";
@@ -84,6 +84,31 @@ public final class JDBCTools {
 			JDBCTools.close(conn);
 		}
 		return CommentDao.SUCCESS;
+	}
+	
+	public static <T> T findByDoubleColumnName(Connection conn, String tableName,
+			String column1Name, Object column1Value, 
+			String column2Name, Object column2Value, 
+			Class<T> clazz) {
+		if (conn == null) {
+			// System.out.println("get Connect fail");
+			return null;
+		}
+		T result = null;
+		QueryRunner qr = new QueryRunner();
+		String sql = "select * from " + tableName + " where " + column1Name
+				+ " = ? and " + column2Name + " = ? ;";
+		Object[] params = { column1Value, column2Value };
+
+		try {
+			result = qr.query(conn, sql, new BeanHandler<T>(clazz), params);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			JDBCTools.close(conn);
+		}
+		return result;
 	}
 
 	public static <T> T findByColumnName(Connection conn, String tableName,

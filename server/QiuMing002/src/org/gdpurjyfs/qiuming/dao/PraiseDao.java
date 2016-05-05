@@ -28,7 +28,7 @@ public class PraiseDao implements CommonDao {
 	
 	@Test
 	public void testdelete() {
-		System.out.println(delete(2));
+		System.out.println(delete(3));
 	}
 	
 	
@@ -76,6 +76,12 @@ public class PraiseDao implements CommonDao {
 		} else {
 			return NONE;
 		}
+	}
+	
+	public Praise findById(long userId, long postId) {
+		return JDBCTools.findByDoubleColumnName(JDBCTools.getConnect(), "praise", 
+				"userId", userId, 
+				"postId", postId, Praise.class);
 	}
 
 	@Override

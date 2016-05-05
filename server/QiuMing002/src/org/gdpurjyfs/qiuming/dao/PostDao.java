@@ -75,7 +75,6 @@ public class PostDao implements CommonDao {
 	//----------------------------------------------------------------------------
 
 	// 修改字段，赞数 praiseNumber
-	
 	public String addPraiseNumber(long postId) {
 		Post post = (Post) findById(postId);
 		if(post != null) {
@@ -102,7 +101,7 @@ public class PostDao implements CommonDao {
 		if (entity != null && entity instanceof Post) {
 			
 			Post post = (Post) entity;			
-			String sql = "INSERT INTO post(userId, title, content,  modifyTime) VALUES(?, ?, ?, ?)";
+			String sql = "INSERT INTO post(userId, title, content, modifyTime) VALUES(?, ?, ?, ?)";
 			Object[] args = {
 					post.getUserId(), 
 					post.getTitle(), 

@@ -77,7 +77,7 @@ public class PostService {
 		// 2. 获取浏览此帖子用户的 id
 		// 3. 向 Praise 写入记录		
 		
-		String result = (String) praiseDao.create(new Praise(postId, userId));
+		String result = (String) praiseDao.create(new Praise(userId, postId));
 		if(result.equals(CommonDao.SUCCESS)) {
 			return postDao.addPraiseNumber(postId);
 		} else {
@@ -93,6 +93,22 @@ public class PostService {
 		} else {
 			return result;
 		}
+	}
+	
+	public long getPostPariseNumber(long postId) {
+		Post post = (Post) postDao.findById(postId);
+		if(post != null) {
+			System.out.println("PostService "+ postId +" getPostPariseNumber:"+post.getPraiseNumber());
+			return post.getPraiseNumber();
+		} else {
+			return 0;
+		}
+	}
+	
+	// 查询用户是否点赞某篇帖子
+	// 不小于 0  的话就是找到了
+	public Praise checkUserParisePost(long userId, long postId) {
+		return  praiseDao.findById(userId, postId);
 	}
 
 	// TODO 删除帖子
