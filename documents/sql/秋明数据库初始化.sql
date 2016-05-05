@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50629
 File Encoding         : 65001
 
-Date: 2016-05-05 16:23:07
+Date: 2016-05-05 18:54:53
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -177,19 +177,20 @@ CREATE TABLE `post` (
   PRIMARY KEY (`id`),
   KEY `articles_user_id` (`userId`),
   KEY `post_role_id` (`postRoleId`)
-) ENGINE=MyISAM AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of post
 -- ----------------------------
-INSERT INTO `post` VALUES ('1', '1', '本站第一个帖子', '# 本站第一个帖子\n番号: ibw-518z, ibw-218。', '1', '1', '2016-04-23 17:52:57', null, '1', '1');
-INSERT INTO `post` VALUES ('3', '1', '本站第三个帖子', '# 本站第三个帖子\n番号 ibw-518z。', '0', '0', '2016-04-23 19:56:16', null, '1', '1');
-INSERT INTO `post` VALUES ('4', '1', '本站第一个发车', '# 秋名山老司机第一发\n番号 ibw-518z。', '0', '0', '2016-04-24 13:12:27', null, '1', '1');
-INSERT INTO `post` VALUES ('5', '1', '本站第一个帖子', '# 本站第一个帖子\n番号 ibw-518z。', '0', '0', '2016-05-03 16:39:02', null, '1', '1');
+INSERT INTO `post` VALUES ('1', '1', '本站第一个帖子', '# 本站第一个帖子\n番号: ibw-518z, ibw-218。', '1', '1', '2016-04-23 17:52:57', '2016-05-05 14:26:45', '1', '1');
+INSERT INTO `post` VALUES ('3', '1', '本站第三个帖子', '# 本站第三个帖子\n番号 ibw-518z。', '0', '0', '2016-04-23 19:56:16', '2016-05-05 14:26:45', '1', '1');
+INSERT INTO `post` VALUES ('4', '1', '本站第一个发车', '# 秋名山老司机第一发\n番号 ibw-518z。', '0', '0', '2016-04-24 13:12:27', '2016-05-05 14:26:45', '1', '1');
+INSERT INTO `post` VALUES ('5', '1', '本站第一个帖子', '# 本站第一个帖子\n番号 ibw-518z。', '0', '0', '2016-05-03 16:39:02', '2016-05-05 14:26:45', '1', '1');
 INSERT INTO `post` VALUES ('6', '1', '跟别人家的标题冲突了', '# 本站第一个帖子\n番号 ibw-518z。', '0', '0', '2016-05-03 16:41:48', '2016-05-05 14:26:45', '1', '1');
 INSERT INTO `post` VALUES ('7', '1', '本站第一个帖子', '# 本站第一个帖子\n番号 ibw-518z。\n randon:0.5092309859862587', '0', '0', '2016-05-05 14:26:20', '2016-05-05 14:26:20', '1', '1');
-INSERT INTO `post` VALUES ('8', '5', 'title', 'WebSocket', '0', '0', '2016-05-05 14:36:19', '2016-05-05 14:36:19', '1', '1');
+INSERT INTO `post` VALUES ('8', '5', 'title', 'WebSocket', '1', '0', '2016-05-05 14:36:19', '2016-05-05 14:36:19', '1', '1');
 INSERT INTO `post` VALUES ('9', '5', 'title', '# 帖子\n\n\n----\n\n[AsmJit : C++ 封裝的 Just-In-Time Assembler](http://blog.linux.org.tw/~jserv/archives/002089.html)\n\n[开源项目asmjit——调用自定义方法demo以及windbg调试](http://www.cnblogs.com/hbccdf/p/asmjit_demo_with_windbg.html)\n\n[谈谈AsmJit](http://www.cnblogs.com/lanrenxinxin/p/5021641.html?utm_source=tuicool&utm_medium=referral)\n\n[[公告] 欢迎来到高级语言虚拟机圈子](http://hllvm.group.iteye.com/group/topic/17147)', '0', '0', '2016-05-05 14:37:01', '2016-05-05 14:37:01', '1', '1');
+INSERT INTO `post` VALUES ('10', '5', '# MySQL 使用笔记', '# MySQL 使用笔记\n\n> 垃圾 MySQL，毁我青春。\n\n在 Window7 下我重新安装了 MySQL 5.7，尝试连接数据库时报如下错误：\n\n> Error 2003(HY000) Can\'t connect to MySQL server (10060) \n\n发现是本地 MySQL 服务无法启动。\n\n使用了 [MySQL 5.6](http://cdn.mysql.com/archives/mysql-5.6/mysql-5.6.29-winx64.zip)，这个是解压版。\n\n解压后，找到 **mysqld.exe** 然后在终端运行如下命令注册 MySQL 服务：\n\n```\nmysqld.exe -install\nnet start mysql\n```\n\n注册服务后，启动，一般会成功的，如果不成功，就再换个低版本的试试。\n\n然后这个解压版是没有设置密码的，用户名为 root，所以如果使用如下命令在终端进入 MySQL：\n\n```\nmysql -u root -p\n```\n\n但是输入 `root` 这个密码的话，是会报错：\n\n> ERROR 1045 (28000): Access denied for user \'root\'@\'localhost\' (using password: NO)\n\n所以控制台下直接输入 `mysql` 就可以进入。\n\n重设密码的时候出现：\n\n> ERROR 1044 (42000): Access denied for user \'\'@\'localhost\' to database \'mysql\'\n\n妈个鸡，用个解压版的 mysql 这么多麻烦。\n\n问题解决，参考这篇文章 [ERROR 1044 (42000): Access denied for user \'\'@\'localhost\' to database \'mysql\'](http://blog.sina.com.cn/s/blog_7d31bbee01012pkz.html)。\n\n先新建一个 `my.ini` 在 MySQL 的根目录下。\n\n```\n[mysqld]\n\nskip-external-locking\nskip-name-resolve\nskip-grant-tables\n\nsql_mode=NO_ENGINE_SUBSTITUTION,STRICT_TRANS_TABLES \n```\n\n写入上诉内容。\n\n然后在控制台键入 `mysql` 默认用户进入 `mysql`，然后在 `mysql` 中输入 `UPDATE user SET Password=PASSWORD(\'root\') where USER=\'root\';` 即可修改密码为 root。\n\n至此，我终于可以说，垃圾 MySQL，毁我青春。', '1', '0', '2016-05-05 18:05:18', '2016-05-05 18:05:19', '1', '1');
 
 -- ----------------------------
 -- Table structure for `post_role`
@@ -219,12 +220,14 @@ CREATE TABLE `praise` (
   `time` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP COMMENT '点赞时间',
   PRIMARY KEY (`id`),
   KEY `praise_user_id` (`userId`)
-) ENGINE=MyISAM AUTO_INCREMENT=20 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=55 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Records of praise
 -- ----------------------------
 INSERT INTO `praise` VALUES ('1', '1', '1', '2016-04-23 18:13:38');
+INSERT INTO `praise` VALUES ('45', '5', '8', '2016-05-05 18:11:38');
+INSERT INTO `praise` VALUES ('53', '5', '10', '2016-05-05 18:50:56');
 
 -- ----------------------------
 -- Table structure for `tag`
@@ -291,7 +294,7 @@ CREATE TABLE `user` (
 -- Records of user
 -- ----------------------------
 INSERT INTO `user` VALUES ('1', 'admin', 'admin', '女仆酱', 'qyvlik@qq.com', null, '16', '秋名山', '1', '女', '3', '这个人太懒了，一句话也没有写');
-INSERT INTO `user` VALUES ('5', 'qyvlik', '1403085871', null, null, null, null, '秋名山', '64', '秀吉', null, '这个人太懒了，一句话也没有写');
+INSERT INTO `user` VALUES ('5', 'qyvlik', '1403085871', null, null, null, null, '秋名山', '106', '秀吉', null, '这个人太懒了，一句话也没有写');
 INSERT INTO `user` VALUES ('2', 'test', 'password', 'pickname', 'email@qq.com', '123456', '1', '秋名山', '0', '秀吉', null, '这个是个人简介');
 INSERT INTO `user` VALUES ('10', '老王', '123456789', '又是一个云老王', 'laowang@qiuming.moe', '0800092000', '20', '秋名山下水道~', '0', '男', '1', '谁家娇妻守空房，我住隔壁我姓王');
 
