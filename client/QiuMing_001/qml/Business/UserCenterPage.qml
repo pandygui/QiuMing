@@ -10,8 +10,26 @@ import "./delegate"
 Page {
     id: page
 
-    // socket
+    title: qsTr("用户中心")
     backNavigationEnabled: true
+
+    rightBarItem: NavigationBarRow {
+        //      ActivityIndicatorBarItem {
+        //        visible: DataModel.loading
+        //      }
+        IconButtonBarItem {
+            icon: IconType.plus
+            title: "发帖"
+            // 发帖
+            onClicked: mainStack.push(editPostPageCom );
+            showItem: showItemAlways
+        }
+        IconButtonBarItem {
+            icon: IconType.tachometer
+            title: "设置"
+            showItem: showItemAlways
+        }
+    }
 
     //    titleItem: Item {
     //        id: header
@@ -49,6 +67,16 @@ Page {
         });
     }
 
+    Component {
+        id: postViewPageCom
+        PostViewPage { }
+    }
+
+    Component {
+        id: editPostPageCom
+        EditPostPage { }
+    }
+
     // socket
     TabControl {
         // tabPosition: Qt.TopEdge
@@ -80,26 +108,10 @@ Page {
                             "roleId"        :itemDelegate.roleId,
                         };
                         mainStack.push(postViewPageCom, properties );
+                        console.log(itemDelegate.time)
                     }
                 }  // itemDelegate
-
-                Component {
-                    id: postViewPageCom
-                    PostViewPage { }
-                }
-
-                Component {
-                    id: editPostPageCom
-                    EditPostPage { }
-                }
-
-                AppButton {
-                    text: "发帖"
-                    onClicked: {
-                        mainStack.push(editPostPageCom );
-                    }
-                }
-
+                listView.spacing: dp(8)
             }
         }
 

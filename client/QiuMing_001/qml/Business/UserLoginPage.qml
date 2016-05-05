@@ -3,6 +3,7 @@ import VPlayApps 1.0
 import QtQuick 2.0
 import QtQuick.Layouts 1.1
 
+import "../Component"
 
 Page {
     id: page
@@ -23,6 +24,14 @@ Page {
                 sourceSize: Qt.size(page.width * 0.3, page.width * 0.3)
                 Layout.alignment: Qt.AlignLeft
                 source: password.activeFocus ? "../../assets/login/left-mask.png" : "../../assets/login/left.png"
+                RippleMouseArea {
+                    anchors.fill: parent
+                    onClicked: {
+                        console.log("try to connect");
+                        socket.active = false;
+                        socket.active = true;
+                    }
+                }
             }
             Item { Layout.fillWidth: true }
             Image {
@@ -93,13 +102,12 @@ Page {
 
     }
 
-    Dialog {
+    AlertDialog {
         id: busyDialog
         mainWindow: app
-        title: "Waiting..."
         positiveActionLabel: "Yes"
         negativeActionLabel: "No"
-        onCanceled: title = "Think again!"
+        onCanceled: close()
         onAccepted: close()
     }
 
@@ -120,13 +128,13 @@ Page {
                 return;
             } else if(messageObj["result"] === "NONE") {
                 console.log("没有此用户");
-                busyDialog.title = "没有此用户";
+                busyDialog.exec("没有此用户","没有此用户");
             } else if(messageObj["result"] === "PASSWORD_FAIL") {
                 console.log("密码错误");
-                busyDialog.title = "密码错误";
+                busyDialog.exec("密码错误","密码错误");
             } else {
                 console.log("未知错误");
-                busyDialog.title = "未知错误";
+                busyDialog.exec("未知错误","未知错误");
             }
 
             lazyer.lazyDo(500, function(){
@@ -135,18 +143,17 @@ Page {
         }
 
         var __err = function(message) {
-            busyDialog.title = message;
+            busyDialog.exec("服务器错误",message);
         }
 
         if(username.text == "") {
-            busyDialog.title = "用户名不能为空";
+            busyDialog.exec("用户名不能为空","用户名不能为空");
             return;
         }
         if(password.text == "") {
-            busyDialog.title = "密码不能为空";
+            busyDialog.exec("密码不能为空","密码不能为空");
             return;
         }
-        busyDialog.open();
 
         socket.login(username.text,
                      password.text,

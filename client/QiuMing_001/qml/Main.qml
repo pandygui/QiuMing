@@ -23,6 +23,10 @@ App {
 
     // Theme {}
     onInitTheme: {
+
+//        Theme.platform = "windows";
+        console.log(Theme.platform)
+
         // 设置主字体颜色
         Theme.colors.textColor = "#ababab";
         // 设置应用背景颜色
@@ -57,6 +61,9 @@ App {
         Theme.tabBar.titleColor = "#b06176"; //"#ababab";
         Theme.tabBar.backgroundColor = "#343434";
         Theme.tabBar.dividerColor = "#434343";
+
+
+
     }
 
     property alias mainStack: mainNavigationStack
@@ -66,17 +73,9 @@ App {
     property alias socket: socket
 
     signal loginSuccess()
+    signal logoutSuccess()
 
-    UserEntity {
-        id: userEntity
-        property bool isLogin: false
-        property string jsessionid: "xxxx"
-        username: "我也是大魔王好不好"
-        password: ""
-        pickname: ""
-        age: 0
-        address: ""
-    }
+    UserEntity { id: userEntity }
 
     Lazyer { id: lazyer }
 
@@ -169,6 +168,7 @@ App {
                     onClicked: {
                         mainNavigation.drawer.close();
                         socket.logout(userEntity.username);
+                        app.logoutSuccess();
                         mainNavigationStack.push(userLoginPage);
                         lazyer.lazyDo(100, function(){
                             socket.active = false;
@@ -190,7 +190,14 @@ App {
                                 indexPage.loadPosts(indexPage.postIndex,
                                                     indexPage.postsSize);
                             }
+                            onLogoutSuccess: {
+                                indexPage.postIndex = 0;
+                                indexPage.postsSize = 10;
+                                // TODO 确保 model 使用给数组！
+                                indexPage.model = [];
+                            }
                         }
+
                     }
                 }
 

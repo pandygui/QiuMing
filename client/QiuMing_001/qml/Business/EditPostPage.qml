@@ -16,8 +16,8 @@ Page {
         anchors.fill: parent
 
         ColumnLayout {
-//            width: parent.width
-//            height: parent.height
+            //            width: parent.width
+            //            height: parent.height
 
             anchors.fill: parent
             anchors.bottomMargin: dp(48)
@@ -94,17 +94,27 @@ Page {
                     onClicked: {
                         var __handle = function(messageObj) {
                             if(messageObj["result"] === "SUCCESS") {
-                                console.log("发帖成功了")
+                                console.log("发帖成功了");
+                                busyDialog.exec("发帖成功了","发帖成功了");
+
                             } else {
-                                console.log("发帖出错了:"+messageObj["message"]);
+                                console.log("发帖出错了:" + messageObj["message"]);
+                                busyDialog.exec("发帖出错了",messageObj["message"]);
                             }
                         }
-
-                        // TODO
-                        if(textEdit.text != "" && titleEdit.text != "") {
-                            socket.createPost(titleEdit.text,textEdit.text, __handle);
+                        if(textEdit.text != "" ) {
+                            if(titleEdit.text != "") {
+                                if(textEdit.text.length > 4096) {
+                                    busyDialog.exec("发帖失败","文章太长啦");
+                                } else {
+                                    socket.createPost(titleEdit.text,textEdit.text, __handle);
+                                }
+                            } else {
+                                busyDialog.exec("标题为空","");
+                            }
                         } else {
-                            console.debug("标题或者内容为空");
+                            console.debug("内容为空");
+                            busyDialog.exec("内容为空","");
                         }
                     }
                 }
@@ -114,6 +124,33 @@ Page {
             }
         }
     }
+
+    Dialog {
+        id: busyDialog
+        mainWindow: app
+        property alias message: messageContent.text
+        positiveActionLabel: "Yes"
+        //negativeActionLabel: "No"
+
+        AppText {
+            id: messageContent
+            anchors.fill: parent
+            wrapMode: Text.WrapAtWordBoundaryOrAnywhere
+        }
+//        onCanceled: {
+//            mainStack.pop();
+//        }
+        onAccepted: {
+            mainStack.pop();
+        }
+
+        function exec(title, message) {
+            busyDialog.title = title;
+            busyDialog.message = message;
+            busyDialog.open();
+        }
+    }
+
 
     Component.onCompleted: {
         textEdit.forceActiveFocus();

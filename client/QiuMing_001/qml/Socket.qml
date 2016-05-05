@@ -27,17 +27,19 @@ Item {
                 break;
             case WebSocket.Closed :
                 console.debug("WebSocket status : Closed");
-                interLazyer.lazyDo(3*1000, function(){
-                    console.log("timeout and connect")
-                    webSocket.active = true;
-                })
+//                interLazyer.lazyDo(3*1000, function(){
+//                    console.log("timeout and connect")
+//                    webSocket.active = false;
+//                    webSocket.active = true;
+//                })
                 break;
             case WebSocket.Error :
                 console.debug("WebSocket status : Error");
-                interLazyer.lazyDo(3*1000, function(){
-                    console.log("timeout and connect")
-                    webSocket.active = true;
-                })
+//                interLazyer.lazyDo(3*1000, function(){
+//                    console.log("timeout and connect")
+//                    webSocket.active = false;
+//                    webSocket.active = true;
+//                })
                 break;
             }
         }

@@ -17,7 +17,6 @@ Page {
     property string     content
     property string     pariseNumber
     property string     postId
-    property string     title
     property string     praiseNumber
     property string     favoriteNumber
     property string     time
@@ -33,7 +32,7 @@ Page {
         ScrollView {
             id: scrollView
             anchors.fill: parent
-            anchors.bottomMargin: dp(48)
+            anchors.bottomMargin: dp(55)
             horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
             verticalScrollBarPolicy: Qt.ScrollBarAlwaysOff
             // verticalScrollBarPolicy: Qt.ScrollBarAlwaysOff
@@ -84,50 +83,70 @@ Page {
                         toggle: true
                         icon: IconType.hearto
                         selectedIcon: IconType.heart
-                        onClicked: {
-                            // 已经点赞过了
-                            var _pariseHandle = function(messageObj) {
-                                if(messageObj["result"] === "SUCCESS") {
-                                    pariseNumber = messageObj["pariseNumber"];
-                                    __pariseThisPost = true;
+                        onClicked: __toggleParise();
+
+                        color: Theme.listItem.activeTextColor
+                        selectedColor: Theme.listItem.activeTextColor
 
 
-                                } else {
-                                    console.debug("pariseHandle 出错");
-                                    console.debug(JSON.stringify(messageObj))
-                                }
-                                parise.selected = __pariseThisPost;
-                            };
-
-                            // 还没有点赞过
-                            var _unpariseHandle = function(messageObj) {
-                                if(messageObj["result"] === "SUCCESS") {
-                                    pariseNumber = messageObj["pariseNumber"];
-                                    __pariseThisPost = false;
-                                } else {
-                                    console.debug("unpariseHandle 出错");
-                                    console.debug(JSON.stringify(messageObj))
-                                }
-                                parise.selected = __pariseThisPost;
-                            };
-
-                            if(__pariseThisPost) {
-                                socket.unparisePost(postId, _unpariseHandle);
-                            } else {
-                                socket.parisePost(postId, _pariseHandle);
-                            }
-                        }
                     }
                     AppText {
                         anchors.verticalCenter: parent.verticalCenter
                         text: pariseNumber
                     }
                 }
-                AppButton {
-                    text: "收藏"
+                // 收藏
+                IconButton {
+                    icon: IconType.star
+                    selectedIcon: IconType.staro
+
+                    color: Theme.listItem.activeTextColor
+                    selectedColor: Theme.listItem.activeTextColor
+
+                    onClicked: __toggleStar();
                 }
             }
         }
+    }
+
+    function __toggleParise() {
+        // 已经点赞过了
+        var _pariseHandle = function(messageObj) {
+            if(messageObj["result"] === "SUCCESS") {
+                pariseNumber = messageObj["pariseNumber"];
+                __pariseThisPost = true;
+
+
+            } else {
+                console.debug("pariseHandle 出错");
+                console.debug(JSON.stringify(messageObj))
+            }
+            parise.selected = __pariseThisPost;
+        };
+
+        // 还没有点赞过
+        var _unpariseHandle = function(messageObj) {
+            if(messageObj["result"] === "SUCCESS") {
+                pariseNumber = messageObj["pariseNumber"];
+                __pariseThisPost = false;
+            } else {
+                console.debug("unpariseHandle 出错");
+                console.debug(JSON.stringify(messageObj))
+            }
+            parise.selected = __pariseThisPost;
+        };
+
+        if(__pariseThisPost) {
+            socket.unparisePost(postId, _unpariseHandle);
+        } else {
+            socket.parisePost(postId, _pariseHandle);
+        }
+    }
+
+    // 收藏
+    // 不过现在先默认收藏到默认收夹
+    function __toggleStar() {
+
     }
 
     Component.onCompleted: {

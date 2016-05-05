@@ -39,6 +39,8 @@ Rectangle {
             width: parent.width
             text: itemDelegate.title
             elide: Text.ElideRight
+            color: "white"
+            font.bold: true
         }
 
         AppText {
@@ -50,8 +52,11 @@ Rectangle {
 
         AppText {
             width: parent.width
-            text: itemDelegate.time
+            // Qt.formatDateTime(d, "hh:mm M月d号")
+            text: Qt.formatDateTime(new Date(Number(itemDelegate.time)), "hh:mm M月d号")
+            horizontalAlignment: Text.AlignRight
             elide: Text.ElideRight
+            font.pixelSize: sp(12)
         }
     }
 
