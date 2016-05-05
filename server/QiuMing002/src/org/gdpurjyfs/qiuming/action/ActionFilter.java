@@ -57,6 +57,7 @@ public class ActionFilter {
 		client.sendMessage(JSON.toJSONString(obj));
 	}
 
+	// TODO
 	public void enterUserCenter(JSONObject action, WebSocketClient client) {
 		if (client.getUser() != null) {
 
@@ -75,6 +76,7 @@ public class ActionFilter {
 		if (parise != null) {
 			obj.put("result", CommonDao.SUCCESS);
 			obj.put("postId", action.getString("postId"));
+			obj.put("pariseNumber", postService.getPostPariseNumber(postId));
 		} else {
 			obj.put("result", CommonDao.NONE);
 			obj.put("postId", 0);
@@ -82,7 +84,34 @@ public class ActionFilter {
 		client.sendMessage(JSON.toJSONString(obj));
 	}
 
-	// 获取指定下标开始，size 大的帖子列表
+	// 获取全部帖子指定下标开始，size 大的帖子列表
+	public void getPostList(JSONObject action, WebSocketClient client) {
+		
+		long index = action.getLongValue("index");
+		long size = action.getLongValue("size");
+		
+
+		
+		HashMap<String, Object> obj = new HashMap<String, Object>();
+		
+		obj.put("uuid", action.getString("uuid"));
+		obj.put("result", "SUCCESS");
+		obj.put("code", "0");
+		
+		System.out.println("action getPostList index: "+index+", size:"+size);
+		
+		List<Post> posts = postService.getPostList(index, size);
+		
+		obj.put("posts", posts);
+		
+		System.out.println("action getPostList posts size: "+posts.size());
+		
+		String string = JSON.toJSONString(obj);
+		System.out.println("string.length()"+string.length());
+		client.sendMessage(string);
+	}
+
+	// 获取用户的指定下标开始，size 大的帖子列表
 	public void getUserPostList(JSONObject action, WebSocketClient client) {
 
 		long index = action.getLongValue("index");
@@ -115,9 +144,9 @@ public class ActionFilter {
 		String title = (String) action.get("title");
 		String content = (String) action.get("content");
 		HashMap<String, Object> obj = new HashMap<String, Object>();
-		
+
 		obj.put("uuid", action.getString("uuid"));
-		
+
 		if (client.getUser() != null) {
 			String result = postService.createPost(new Post(client.getUser()
 					.getId(), title, content));
@@ -144,25 +173,25 @@ public class ActionFilter {
 		long postId = action.getLongValue("postId");
 		obj.put("uuid", action.getString("uuid"));
 		obj.put("postId", postId);
-		
+
 		if (client.getUser() != null) {
 
 			long userId = client.getUser().getId();
-						
+
 			String result = postService.unparisePost(userId, postId);
 			obj.put("result", result);
-			
-			if(!result.equals(CommonDao.SUCCESS)) {
+
+			if (!result.equals(CommonDao.SUCCESS)) {
 				obj.put("code", "-2");
 				obj.put("message", "取消赞失败");
-			} 
-			
+			}
+
 		} else {
 			obj.put("result", "ERROR");
 			obj.put("code", "-1");
 			obj.put("message", "请登录后操作");
 		}
-		
+
 		obj.put("pariseNumber", postService.getPostPariseNumber(postId));
 		client.sendMessage(JSON.toJSONString(obj));
 	}
@@ -175,34 +204,53 @@ public class ActionFilter {
 		long postId = action.getLongValue("postId");
 		obj.put("uuid", action.getString("uuid"));
 		obj.put("postId", postId);
-		
+
 		if (client.getUser() != null) {
 			long userId = client.getUser().getId();
-						
+
 			String result = postService.parisePost(userId, postId);
 			obj.put("result", result);
-			
-			if(!result.equals(CommonDao.SUCCESS)) {
+
+			if (!result.equals(CommonDao.SUCCESS)) {
 				obj.put("code", "-2");
 				obj.put("message", "点赞帖子");
-			} 
-			
+			}
 		} else {
 			obj.put("result", "ERROR");
 			obj.put("code", "-1");
 			obj.put("message", "请登录后操作");
 		}
-		
+
 		obj.put("pariseNumber", postService.getPostPariseNumber(postId));
 		client.sendMessage(JSON.toJSONString(obj));
 	}
 
-	// TODO
+	// 登出
 	public void logout(JSONObject action, WebSocketClient client) {
+		System.out.println("action logout");
+		User user = client.getUser();
 
+		HashMap<String, Object> obj = new HashMap<String, Object>();
+		obj.put("uuid", action.getString("uuid"));
+
+		if (user != null) {
+			if (user.getUsername().equals(action.get("username"))) {
+				client.setUser(null);
+				obj.put("result", "SUCCESS");
+			} else {
+				obj.put("result", "ERROR");
+				obj.put("message", "用户名与服务端不符");
+			}
+		} else {
+			obj.put("result", "ERROR");
+			obj.put("message", "用户早已登出");
+		}
+		client.sendMessage(JSON.toJSONString(obj));
 	}
 
-	public void filter(String message, WebSocketClient client) {
+	public void filter(WebSocketServer server, String message,
+			WebSocketClient client) {
+
 		JSONObject action = JSON.parseObject(message);
 		String actionString = (String) action.get("action");
 		if (actionString == null) {
@@ -213,16 +261,20 @@ public class ActionFilter {
 
 		if (actionString.equals("login")) {
 			login(action, client);
+		} else if (actionString.equals("logout")) {
+			logout(action, client);
 		} else if (actionString.equals("getUserPostList")) {
 			getUserPostList(action, client);
 		} else if (actionString.equals("createPost")) {
 			createPost(action, client);
 		} else if (actionString.equals("checkUserParisePost")) {
 			checkUserParisePost(action, client);
-		} else if(actionString.equals("parisePost")) {
+		} else if (actionString.equals("parisePost")) {
 			parisePost(action, client);
-		} else if(actionString.equals("unparisePost")) {
+		} else if (actionString.equals("unparisePost")) {
 			unparisePost(action, client);
+		} else if(actionString.equals("getPostList")) {
+			getPostList(action, client);
 		}
 	}
 

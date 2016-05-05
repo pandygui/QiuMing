@@ -197,7 +197,25 @@ public final class JDBCTools {
 			JDBCTools.close(conn);
 		}
 	}
+	
+	// 获取指定表，index , size 
+	public static <T> List<T> getRecodeList(Connection conn, String tableName, long index, long size, Class<T> clazz) {
+		QueryRunner qr = new QueryRunner();
 
+		// select * from post where userId = userid limit index, size;
+
+		String sql = "select * from " + tableName +" LIMIT ?, ? ;";
+		Object[] params = { index, size };
+		try {
+			return qr.query(conn, sql, new BeanListHandler<T>(clazz), params);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		} finally {
+			JDBCTools.close(conn);
+		}
+	}
+	
 	public static Connection getConnect() {
 		Connection conn = null;
 

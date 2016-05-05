@@ -71,6 +71,14 @@ public class PostDao implements CommonDao {
 		}
 	}
 	
+	@Test
+	public void testgetPostList2() {
+		List<Post> posts = getPostList( 0, 10);
+		if(posts != null) {
+			System.out.println("get : " + posts.size());
+		}
+	}
+	
 	
 	//----------------------------------------------------------------------------
 
@@ -148,6 +156,12 @@ public class PostDao implements CommonDao {
 	@Override
 	public Object findById(long id) {		
 		return JDBCTools.findById(JDBCTools.getConnect(), "post", id, Post.class);
+	}
+	
+	public List<Post> getPostList(long index, long size) {
+		return JDBCTools.getRecodeList(JDBCTools.getConnect(), "post", 
+				index, size,
+				Post.class);
 	}
 	
 	public List<Post> getPostList(long userId, long index, long size) {

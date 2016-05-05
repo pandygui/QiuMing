@@ -39,6 +39,10 @@ public class PostService {
 		return postDao.getPostList(user.getId(), index, size);
 	}
 	
+	public List<Post> getPostList(long index, long size) {
+		return postDao.getPostList(index, size);
+	}
+	
 	// 创建帖子
 	public String createPost(Post post) {
 		// userId title content
@@ -98,7 +102,7 @@ public class PostService {
 	public long getPostPariseNumber(long postId) {
 		Post post = (Post) postDao.findById(postId);
 		if(post != null) {
-			System.out.println("PostService "+ postId +" getPostPariseNumber:"+post.getPraiseNumber());
+			// System.out.println("PostService "+ postId +" getPostPariseNumber:"+post.getPraiseNumber());
 			return post.getPraiseNumber();
 		} else {
 			return 0;
