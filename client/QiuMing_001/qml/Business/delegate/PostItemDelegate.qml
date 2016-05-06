@@ -64,7 +64,6 @@ Rectangle {
         anchors.fill: parent
         onClicked: {
             itemDelegate.clicked()
-            // console.log("post id:"+itemDelegate.postId);
 //            var properties = {
 //                "author"        : itemDelegate.userId,
 //                "content"       : itemDelegate.content,

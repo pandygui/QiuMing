@@ -30,40 +30,37 @@ ListPage {
             // 2. 计算得出下一次请求的页面，size
             // 3. 如果获取到的是空，就提示用户，没有更多内容了。
             var pos = page.listView.getScrollPosition() //retrieve scroll position data
-
             var startIndex = page.model.length;
             postIndex = startIndex;
             console.debug("继续加载旧的");
-            defaultAppActivityIndicatorVisible = true;
-            lazyer.lazyDo(1000, function() {
-                defaultAppActivityIndicatorVisible = false;
 
-                var _getPosts = function(messageObj) {
-                    if(messageObj["result"] === "SUCCESS") {
-                        console.log("装载成功：length", messageObj["posts"].length)
-                        var newPosts =  messageObj["posts"];
-                        if(newPosts.length !== 0) {
-                            for(var iter in newPosts) {
-                                page.model.push(newPosts[iter]);
-                                // 要主动通知视图
-                                // 或者自行设计一个 ListModel
-                                page.modelChanged();
-                                // 然后让 ListView 移动到startIndex
-                                page.listView.restoreScrollPosition(pos) //scrolls to the previous position
-                            }
-                        } else {
-                            console.debug("没有更多的帖子了");
+            defaultAppActivityIndicatorVisible = true;
+            var _getPosts = function(messageObj) {
+                if(messageObj["result"] === "SUCCESS") {
+                    console.log("装载成功：length", messageObj["posts"].length)
+                    var newPosts =  messageObj["posts"];
+                    if(newPosts.length !== 0) {
+                        for(var iter in newPosts) {
+                            page.model.push(newPosts[iter]);
+                            // 要主动通知视图
+                            // 或者自行设计一个 ListModel
+                            page.modelChanged();
+                            // 然后让 ListView 移动到startIndex
+                            page.listView.restoreScrollPosition(pos) //scrolls to the previous position
                         }
                     } else {
-                        console.debug("装载失败：", JSON.stringify(messageObj));
+                        console.debug("没有更多的帖子了");
                     }
+                } else {
+                    console.debug("装载失败：", JSON.stringify(messageObj));
                 }
-                // 在整个帖子表中获取指定 index 和 size
-                socket.getPostList(postIndex,
-                                   postsSize,
-                                   _getPosts);
-                console.debug("加载完毕");
-            });
+                defaultAppActivityIndicatorVisible = false;
+            }
+            // 在整个帖子表中获取指定 index 和 size
+            socket.getPostList(postIndex,
+                               postsSize,
+                               _getPosts);
+            console.debug("加载完毕");
         }
     }
 

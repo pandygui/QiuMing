@@ -61,9 +61,6 @@ App {
         Theme.tabBar.titleColor = "#b06176"; //"#ababab";
         Theme.tabBar.backgroundColor = "#343434";
         Theme.tabBar.dividerColor = "#434343";
-
-
-
     }
 
     property alias mainStack: mainNavigationStack

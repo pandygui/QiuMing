@@ -294,5 +294,22 @@ Item {
         };
         send(action, callable, err);
     }
+
+    // 由于用户登录了，是在服务端记录登陆状态的，所以在客户端只管发送请求
+    // 获取用户 favoriteName 收藏夹下所有的帖子
+    function getUserFavoriteList(favoriteName, callable, err) {
+        console.debug("action : getUserFavoriteList")
+        callable = callable || function(messageObj) {
+            console.log(JSON.stringify(messageObj));
+        };
+        err = err || function(message) {
+            console.log(message)
+        };
+        var action = {
+            "action": "getUserFavoriteList",
+            "favoriteName":favoriteName,
+        };
+        send(action, callable, err);
+    }
 }
 
