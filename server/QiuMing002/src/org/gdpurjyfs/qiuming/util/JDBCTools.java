@@ -115,21 +115,19 @@ public final class JDBCTools {
 			// System.out.println("get Connect fail");
 			return null;
 		}
-		T result = null;
 		QueryRunner qr = new QueryRunner();
 		String sql = "select * from " + tableName + " where " + columnName
 				+ " = ?;";
 		Object[] params = { columnValue };
 
 		try {
-			result = qr.query(conn, sql, new BeanHandler<T>(clazz), params);
+			return qr.query(conn, sql, new BeanHandler<T>(clazz), params);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
 		} finally {
 			JDBCTools.close(conn);
 		}
-		return result;
 	}
 
 	public static <T> T findById(Connection conn, String tableName, long id,

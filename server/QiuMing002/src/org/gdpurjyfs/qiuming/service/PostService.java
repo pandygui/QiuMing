@@ -1,5 +1,6 @@
 package org.gdpurjyfs.qiuming.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.gdpurjyfs.qiuming.dao.CommentDao;
@@ -74,7 +75,25 @@ public class PostService {
 	}
 	
 	/**
-	 * 获取用户的收藏列表
+	 * 获取用户指定收藏夹所有的帖子
+	 ***/
+	public List<Post> getUserFavoriteList(long userId, String favoriteName) {
+		List<Favorite> favorites = favoriteDao.getUserFavoriteList(userId, favoriteName);
+		// 这里要填充 Post 
+		List<Post> favoritePosts = new ArrayList<Post>();
+		for(Favorite f: favorites) {
+			Post p = viewPost(f.getPostId());
+			if(p != null) {
+				favoritePosts.add(p);
+			}
+		}
+		return favoritePosts;
+	}
+	
+	
+	
+	/**
+	 * 分段获取用户的收藏列表
 	 ***/
 	public List<Favorite> getUserFavoriteList(long userId, long index, long size) {
 		return favoriteDao.getUserFavoriteList(userId, index, size);

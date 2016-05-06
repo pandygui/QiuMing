@@ -7,6 +7,7 @@ import java.util.List;
 import org.gdpurjyfs.qiuming.api.WebSocketClient;
 import org.gdpurjyfs.qiuming.dao.CommonDao;
 import org.gdpurjyfs.qiuming.dao.UserDao;
+import org.gdpurjyfs.qiuming.entity.Favorite;
 import org.gdpurjyfs.qiuming.entity.Post;
 import org.gdpurjyfs.qiuming.entity.User;
 import org.gdpurjyfs.qiuming.service.PostService;
@@ -15,6 +16,7 @@ import org.gdpurjyfs.qiuming.service.UserService;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 
+@SuppressWarnings("unused")
 public class UserAction {
 
 	private UserService userService = new UserService();
@@ -23,7 +25,7 @@ public class UserAction {
 	// 登陆
 	// TODO 这里要注意，校验用户登录情况
 	public void login(JSONObject action, WebSocketClient client) {
-		// System.out.println("ActionFilter.login");
+	 System.out.println("action login");
 		User user = new User();
 		String username = (String) action.get("username");
 		String password = (String) action.get("password");
@@ -92,6 +94,37 @@ public class UserAction {
 				obj.put("result", "SUCCESS");
 				obj.put("code", "0");
 				obj.put("posts", new ArrayList<Post>());
+			}
+		} else {
+			obj.put("result", "ERROR");
+			obj.put("code", "-1");
+			obj.put("message", "请登录后操作");
+		}
+		client.sendMessage(JSON.toJSONString(obj));
+	}
+	
+	/**
+	 * 获取用户指定收藏夹的所有帖子
+	 ***/
+	public void getUserFavoriteList(JSONObject action, WebSocketClient client) {
+		System.out.println("aciton getUserFavoriteList");
+		HashMap<String, Object> obj = new HashMap<String, Object>();
+		String favoriteName = action.getString("favoriteName");
+		obj.put("uuid", action.getString("uuid"));
+		
+		if (client.getUser() != null) {
+			List<Post> favorites =
+					postService.getUserFavoriteList(client.getUser().getId(),
+							favoriteName);
+			if (favorites != null) {
+				obj.put("result", "SUCCESS");
+				obj.put("code", "0");
+				obj.put("favorites", favorites);
+				
+			} else {
+				obj.put("result", "SUCCESS");
+				obj.put("code", "0");
+				obj.put("favorites", new ArrayList<Post>());
 			}
 		} else {
 			obj.put("result", "ERROR");

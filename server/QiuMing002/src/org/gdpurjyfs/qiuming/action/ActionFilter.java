@@ -58,6 +58,8 @@ public class ActionFilter {
 			postAction.checkUserFavoritePost(action, client); 
 		} else if(actionString.equals("favoritePost")) {
 			postAction.favoritePost(action, client); 
+		} else if(actionString.equals("getUserFavoriteList")) {
+			userAction.getUserFavoriteList(action, client); 
 		} 
 	}
 
