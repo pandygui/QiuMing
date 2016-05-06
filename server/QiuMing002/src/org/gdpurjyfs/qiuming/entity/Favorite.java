@@ -13,6 +13,16 @@ public class Favorite {
 		this.favoriteName = "默认收藏夹";
 	}
 	
+	public Favorite(long userId, long postId) {
+		this(userId, postId, "默认收藏夹");
+	}
+	
+	public Favorite(long userId, long postId, String favoriteName) {
+		this.userId = userId;
+		this.postId = postId;
+		this.favoriteName = favoriteName;
+	}
+
 	public long getId() {
 		return id;
 	}

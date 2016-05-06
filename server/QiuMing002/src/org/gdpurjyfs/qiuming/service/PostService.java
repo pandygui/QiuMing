@@ -27,6 +27,7 @@ public class PostService {
 
 	private PostDao postDao = new PostDao();
 	private PraiseDao praiseDao = new PraiseDao();
+	private FavoriteDao favoriteDao = new FavoriteDao();
 	
 	private Post post;
 	private User user;
@@ -35,47 +36,71 @@ public class PostService {
 	private String favoriteName; // 收藏夹名称
 	private String complainReason; // 举报理由
 
+	/**
+	 * 获取用户的帖子列表
+	 ***/
 	public List<Post> getUserPostList(User user, long index, long size) {
 		return postDao.getPostList(user.getId(), index, size);
 	}
 	
+	/**
+	 * 获取帖子列表
+	 ***/
 	public List<Post> getPostList(long index, long size) {
 		return postDao.getPostList(index, size);
 	}
 	
-	// 创建帖子
+	
+	/**
+	 * 创建帖子
+	 ***/
 	public String createPost(Post post) {
 		// userId title content
 		return (String) postDao.create(post);
 	}
 	
-	// 查看帖子
+	/**
+	 * 查看帖子
+	 ***/
 	public Post viewPost(long postId) {
 		return (Post) postDao.findById(postId);
 	}
 	
-	// 修改帖子
+	/**
+	 * 修改帖子
+	 ***/
 	public String modifyPost(Post post) {
 		return (String) postDao.update(post);
 	}
-
-
-	// TODO 收藏帖子
-	public String favoritePost() {
-		// 1. 获取 帖子 id
-		// 2. 获取 用户 id
-		// 3. 向 Favorite 中插入记录
-		FavoriteDao favoriteDao = new FavoriteDao();
-		Favorite favorite = new Favorite();
-		favorite.setPostId(this.getPost().getId());
-		favorite.setUserId(this.getUser().getId());
-		favorite.setFavoriteName(this.getFavoriteName());
-		favoriteDao.create(favorite);
-
-		return "";
+	
+	/**
+	 * 获取用户的收藏列表
+	 ***/
+	public List<Favorite> getUserFavoriteList(long userId, long index, long size) {
+		return favoriteDao.getUserFavoriteList(userId, index, size);
 	}
 
-	// 点赞帖子
+	/**
+	 * 收藏帖子
+	 ***/
+	public String favoritePost(long userId, long postId, String favoriteName) {
+		return (String)favoriteDao.create(new Favorite(userId, postId, favoriteName));
+	}
+	
+	/**
+	 * 取消收藏帖子
+	 ***/
+	public String unfavoritePost(long userId, long postId, String favoriteName) {
+		return favoriteDao.delete(userId, postId, favoriteName);
+	}
+	
+	public Favorite checkUserFavoritePost(long userId, long postId, String favoriteName) {
+		return favoriteDao.find(userId, postId, favoriteName);
+	}
+	
+	/**
+	 * 点赞帖子
+	 ***/
 	public String parisePost(long userId, long postId) {
 		// 1. 获取帖子 id
 		// 2. 获取浏览此帖子用户的 id
@@ -89,7 +114,9 @@ public class PostService {
 		}
 	}
 	
-	// 取消赞
+	/**
+	 * 取消赞帖子
+	 ***/
 	public String unparisePost(long userId, long postId) {
 		String result = praiseDao.delete(userId, postId);
 		if(result.equals(CommonDao.SUCCESS)) {
@@ -99,6 +126,9 @@ public class PostService {
 		}
 	}
 	
+	/**
+	 * 获取帖子的赞数
+	 ***/
 	public long getPostPariseNumber(long postId) {
 		Post post = (Post) postDao.findById(postId);
 		if(post != null) {
@@ -108,14 +138,18 @@ public class PostService {
 			return 0;
 		}
 	}
-	
-	// 查询用户是否点赞某篇帖子
-	// 不小于 0  的话就是找到了
+
+	/**
+	 * 查询用户是否点赞某篇帖子
+	 * 不小于 0  的话就是用户已经点赞过了
+	 ***/
 	public Praise checkUserParisePost(long userId, long postId) {
-		return  praiseDao.findById(userId, postId);
+		return praiseDao.findById(userId, postId);
 	}
 
-	// TODO 删除帖子
+	/**
+	 * 删除帖子
+	 ***/
 	public String deletePost(long postId) {
 		return (String) postDao.delete(postId);
 	}

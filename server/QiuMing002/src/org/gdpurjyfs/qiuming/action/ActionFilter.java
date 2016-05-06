@@ -52,7 +52,13 @@ public class ActionFilter {
 			postAction.unparisePost(action, client);
 		} else if(actionString.equals("getPostList")) {
 			postAction.getPostList(action, client);
-		}
+		} else if(actionString.equals("unfavoritePost")) {
+			postAction.unfavoritePost(action, client);
+		} else if(actionString.equals("checkUserFavoritePost")) {
+			postAction.checkUserFavoritePost(action, client); 
+		} else if(actionString.equals("favoritePost")) {
+			postAction.favoritePost(action, client); 
+		} 
 	}
 
 	// 发送错误信息

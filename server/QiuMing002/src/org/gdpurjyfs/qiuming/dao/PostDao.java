@@ -87,7 +87,8 @@ public class PostDao implements CommonDao {
 		Post post = (Post) findById(postId);
 		if(post != null) {
 			long praiseNumber = post.getPraiseNumber() + 1;
-			return JDBCTools.modifyColumnById(JDBCTools.getConnect(), "post", "praiseNumber", praiseNumber, postId);
+			return JDBCTools.modifyColumnById(JDBCTools.getConnect(), "post",
+					"praiseNumber", praiseNumber, postId);
 		} else {
 			return CommonDao.NONE;
 		}
@@ -115,7 +116,7 @@ public class PostDao implements CommonDao {
 					post.getTitle(), 
 					post.getContent(),
 					new Timestamp(new Date().getTime())
-					};
+			};
 			
 			return JDBCTools.create(JDBCTools.getConnect(), sql, args);
 		} else {
@@ -158,12 +159,18 @@ public class PostDao implements CommonDao {
 		return JDBCTools.findById(JDBCTools.getConnect(), "post", id, Post.class);
 	}
 	
+	/**
+	 * 获取帖子
+	 **/
 	public List<Post> getPostList(long index, long size) {
 		return JDBCTools.getRecodeList(JDBCTools.getConnect(), "post", 
 				index, size,
 				Post.class);
 	}
 	
+	/**
+	 * 获取用户的帖子
+	 **/
 	public List<Post> getPostList(long userId, long index, long size) {
 		return JDBCTools.getRecodeListById(JDBCTools.getConnect(), "post", 
 				"userId", userId,

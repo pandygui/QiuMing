@@ -86,7 +86,7 @@ public final class JDBCTools {
 		return CommentDao.SUCCESS;
 	}
 	
-	public static <T> T findByDoubleColumnName(Connection conn, String tableName,
+	public static <T> List<T> findByDoubleColumnName(Connection conn, String tableName,
 			String column1Name, Object column1Value, 
 			String column2Name, Object column2Value, 
 			Class<T> clazz) {
@@ -94,21 +94,19 @@ public final class JDBCTools {
 			// System.out.println("get Connect fail");
 			return null;
 		}
-		T result = null;
 		QueryRunner qr = new QueryRunner();
 		String sql = "select * from " + tableName + " where " + column1Name
 				+ " = ? and " + column2Name + " = ? ;";
 		Object[] params = { column1Value, column2Value };
 
 		try {
-			result = qr.query(conn, sql, new BeanHandler<T>(clazz), params);
+			return qr.query(conn, sql, new BeanListHandler<T>(clazz), params);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
 		} finally {
 			JDBCTools.close(conn);
 		}
-		return result;
 	}
 
 	public static <T> T findByColumnName(Connection conn, String tableName,
@@ -177,6 +175,7 @@ public final class JDBCTools {
 		return CommentDao.SUCCESS;
 	}
 
+	// TODO 设置排序
 	public static <T> List<T> getRecodeListById(Connection conn, String tableName,
 			String idName, long id, long index, long size, Class<T> clazz) {
 
@@ -199,6 +198,7 @@ public final class JDBCTools {
 	}
 	
 	// 获取指定表，index , size 
+	// TODO 设置排序
 	public static <T> List<T> getRecodeList(Connection conn, String tableName, long index, long size, Class<T> clazz) {
 		QueryRunner qr = new QueryRunner();
 

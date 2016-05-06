@@ -26,6 +26,11 @@ public class WebSocketServer {
 	// sessionId Client
 	private static HashMap<String, WebSocketClient> userMap = new HashMap<String, WebSocketClient>(); 
 
+	// 一般是一个连接一个 WebSocketServer 实例
+	public WebSocketServer() {
+		// System.out.println("WebSocketServer()...");
+	}
+	
 	/**
 	 * 连接建立成功调用的方法
 	 * 
@@ -39,7 +44,7 @@ public class WebSocketServer {
 		addClient(session.getId(), new WebSocketClient(session));
 
 		addOnlineCount(); // 在线数加1
-		System.out.println("有新连接加入！当前在线人数为" + getOnlineCount());
+		// System.out.println("有新连接加入！当前在线人数为" + getOnlineCount());
 	}
 
 	/**
@@ -53,7 +58,7 @@ public class WebSocketServer {
     	removeClient(peer.getId());
     	
     	subOnlineCount(); // 在线数减1
-		System.out.println("有一连接关闭！当前在线人数为" + getOnlineCount());
+		// System.out.println("有一连接关闭！当前在线人数为" + getOnlineCount());
     }  
 
 	/**
@@ -91,7 +96,7 @@ public class WebSocketServer {
 	@OnError
 	public void onError(Session session, Throwable error) {
 		System.out.println("发生错误");
-	   // error.printStackTrace();
+	    error.printStackTrace();
 	}
 	
 	public static synchronized int getOnlineCount() {

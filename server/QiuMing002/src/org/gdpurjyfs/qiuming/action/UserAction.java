@@ -21,7 +21,7 @@ public class UserAction {
 	private PostService postService = new PostService();
 	
 	// 登陆
-	// 这里要注意，校验用户登录情况
+	// TODO 这里要注意，校验用户登录情况
 	public void login(JSONObject action, WebSocketClient client) {
 		// System.out.println("ActionFilter.login");
 		User user = new User();

@@ -79,9 +79,10 @@ public class PraiseDao implements CommonDao {
 	}
 	
 	public Praise findById(long userId, long postId) {
-		return JDBCTools.findByDoubleColumnName(JDBCTools.getConnect(), "praise", 
+		List<Praise> praises = JDBCTools.findByDoubleColumnName(JDBCTools.getConnect(), "praise", 
 				"userId", userId, 
 				"postId", postId, Praise.class);
+		return praises != null && praises.size() != 0 ? praises.get(0) : null;
 	}
 
 	@Override
