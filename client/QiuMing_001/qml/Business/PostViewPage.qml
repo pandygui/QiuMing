@@ -24,7 +24,8 @@ Page {
     property int        postState				// 帖子审核状态，0 ： 不通过，1 ： 通过
     property string     roleId                  // 1 帖子 2 发车
 
-    property bool __pariseThisPost: false       // 使用本应用的用户是否点赞了此片帖子
+    property bool       __pariseThisPost: false       // 使用本应用的用户是否点赞了此篇帖子
+    property bool       __favoriteThisPost: false     // 使用本应用的用户是否收藏了此篇帖子
 
     Item {
         anchors.fill: parent
@@ -80,25 +81,29 @@ Page {
                     IconButton {
                         id: parise
                         anchors.verticalCenter: parent.verticalCenter
+
                         toggle: true
                         icon: IconType.hearto
                         selectedIcon: IconType.heart
-                        onClicked: __toggleParise();
 
                         color: Theme.listItem.activeTextColor
                         selectedColor: Theme.listItem.activeTextColor
 
-
+                        onClicked: __toggleParise();
                     }
                     AppText {
                         anchors.verticalCenter: parent.verticalCenter
                         text: pariseNumber
                     }
                 }
+                 //IconType{}
                 // 收藏
                 IconButton {
-                    icon: IconType.star
-                    selectedIcon: IconType.staro
+                    id: favoriteButton
+
+                    toggle: true
+                    icon: IconType.staro
+                    selectedIcon: IconType.star
 
                     color: Theme.listItem.activeTextColor
                     selectedColor: Theme.listItem.activeTextColor
@@ -115,8 +120,6 @@ Page {
             if(messageObj["result"] === "SUCCESS") {
                 pariseNumber = messageObj["pariseNumber"];
                 __pariseThisPost = true;
-
-
             } else {
                 console.debug("pariseHandle 出错");
                 console.debug(JSON.stringify(messageObj))
@@ -146,7 +149,33 @@ Page {
     // 收藏
     // 不过现在先默认收藏到默认收夹
     function __toggleStar() {
+        // 已经收藏过了
+        var _favoriteHandle = function(messageObj) {
+            if(messageObj["result"] === "SUCCESS") {
+                __favoriteThisPost = true;
+            } else {
+                console.debug("_favoriteHandle 出错");
+                console.debug(JSON.stringify(messageObj))
+            }
+            favoriteButton.selected = __favoriteThisPost;
+        };
 
+        // 还没有收藏
+        var _unfavoriteHandle = function(messageObj) {
+            if(messageObj["result"] === "SUCCESS") {
+                __favoriteThisPost = false;
+            } else {
+                console.debug("_unfavoriteHandle 出错");
+                console.debug(JSON.stringify(messageObj))
+            }
+            favoriteButton.selected = __favoriteThisPost;
+        };
+
+        if(__favoriteThisPost) {
+            socket.unfavoritePost(userEntity.userId, postId, "默认收藏夹", _unfavoriteHandle);
+        } else {
+            socket.favoritePost(userEntity.userId, postId, "默认收藏夹", _favoriteHandle);
+        }
     }
 
     Component.onCompleted: {
@@ -154,7 +183,7 @@ Page {
         // 本页面的 postId
 
         // 检查用户师是否点赞，并且自动更新 pariseNumber
-        var _handle = function(messageObj){
+        var _handle1 = function(messageObj){
             // pariseNumber = messageObj["pariseNumber"];
             if(messageObj["result"] === "SUCCESS") {
                 // 已经点赞过
@@ -175,7 +204,31 @@ Page {
 
             parise.selected = __pariseThisPost;
         };
-        socket.checkUserParisePost(userEntity.userId, postId, _handle);
+
+        var _handle2 = function(messageObj) {
+            console.log("back uuid:", messageObj["uuid"]);
+            if(messageObj["result"] === "SUCCESS") {
+                // 已经收藏过
+                __favoriteThisPost = true;
+                console.log("已经收藏过");
+
+            } else if(messageObj["result"] === "NONE") {
+                // 还未点赞过
+                __favoriteThisPost = false;
+                console.log("还未收藏过");
+            } else {
+                // 服务器出错了。
+                console.log("aciton:checkUserFavoritePost", messageObj["message"]);
+                __favoriteThisPost = false;
+                console.log("服务器出错了。");
+            }
+
+            favoriteButton.selected = __favoriteThisPost;
+        }
+
+        socket.checkUserParisePost(userEntity.userId, postId, _handle1);
+        socket.checkUserFavoritePost(userEntity.userId, postId, "默认收藏夹", _handle2);
+
     }
 }
 

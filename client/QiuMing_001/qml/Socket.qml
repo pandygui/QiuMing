@@ -238,5 +238,61 @@ Item {
         };
         send(action, callable, err);
     }
+    // 由于用户登录了，是在服务端记录登陆状态的，所以在客户端只管发送请求
+    // 用户 userId 收藏 帖子 postId 到 收藏夹 favoriteName
+    function favoritePost(userId, postId, favoriteName, callable, err) {
+        console.debug("action : favoritePost")
+        callable = callable || function(messageObj) {
+            console.log(JSON.stringify(messageObj));
+        };
+        err = err || function(message) {
+            console.log(message)
+        };
+        var action = {
+            "action": "favoritePost",
+            "userId": userId,
+            "postId": postId,
+            "favoriteName":favoriteName,
+        };
+        send(action, callable, err);
+    }
+
+    // 由于用户登录了，是在服务端记录登陆状态的，所以在客户端只管发送请求
+    // 用户 userId 取消收藏 帖子 postId 到 收藏夹 favoriteName
+    function unfavoritePost(userId, postId, favoriteName, callable, err) {
+        console.debug("action : unfavoritePost")
+        callable = callable || function(messageObj) {
+            console.log(JSON.stringify(messageObj));
+        };
+        err = err || function(message) {
+            console.log(message)
+        };
+        var action = {
+            "action": "unfavoritePost",
+            "userId": userId,
+            "postId": postId,
+            "favoriteName":favoriteName,
+        };
+        send(action, callable, err);
+    }
+
+    // 由于用户登录了，是在服务端记录登陆状态的，所以在客户端只管发送请求
+    // 检查用户 userId 是否收藏 帖子 postId 到 收藏夹 favoriteName
+    function checkUserFavoritePost(userId, postId, favoriteName, callable, err) {
+        console.debug("action : checkUserFavoritePost")
+        callable = callable || function(messageObj) {
+            console.log(JSON.stringify(messageObj));
+        };
+        err = err || function(message) {
+            console.log(message)
+        };
+        var action = {
+            "action": "checkUserFavoritePost",
+            "userId": userId,
+            "postId": postId,
+            "favoriteName":favoriteName,
+        };
+        send(action, callable, err);
+    }
 }
 
