@@ -1,52 +1,47 @@
 package org.gdpurjyfs.qiuming.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.gdpurjyfs.qiuming.dao.FriendDao;
 import org.gdpurjyfs.qiuming.dao.UserDao;
 import org.gdpurjyfs.qiuming.entity.Friend;
 import org.gdpurjyfs.qiuming.entity.User;
 
 public class FriendService {
-	/*
-	 * 加关注 
-	 */
+	/* 加关注 取消关注 获取用户关注列表 */
 	
-	private User user;
-	private User focusUser;
-
-	// TODO
-	public String focus() {
-		// 1. 查找被关注用户是否存在
-		// 2. 是否已经关注了
-		// 3. 写入 Friend 记录
-		
-		UserDao userDao = new UserDao();
-		User findUser = (User)userDao.findById(this.getUser().getId());
-		if(findUser != null ) {
-			FriendDao friendDao = new FriendDao();
-			Friend friend = new Friend();
-			friend.setFocusUserId(this.getFocusUser().getId());
-			friend.setUserId(this.getUser().getId());
-			
-			friendDao.create(friend);
+	private FriendDao friendDao = new FriendDao();
+	private UserDao userDao = new UserDao();
+	
+	/**
+	 * 获取用户关注列表
+	 * 注意返回的用户中的 password 一定是空的！
+	 ***/
+	public List<User> getFriendList(long userId) {
+		List<Friend> friends = friendDao.getFriendList(userId);
+		List<User> users = new ArrayList<User>();
+		for(Friend f : friends) {
+			User user = (User)userDao.findById(f.getFocusUserId());
+			if(user != null) {
+				users.add(user);
+			}
 		}
-		
-		
-		return "";
-	}	
+		return users;
+	}
 	
-	public User getUser() {
-		return user;
+	/**
+	 * 关注某个用户
+	 ***/
+	public String focusUser(long userId, long focusUserId) {
+		return (String) friendDao.create(new Friend(userId, focusUserId));
+	}
+	
+	/**
+	 * 取消关注某个用户
+	 ***/
+	public String unfocusUser(long userId, long focusUserId) {
+		return friendDao.delete(userId, focusUserId);
 	}
 
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public User getFocusUser() {
-		return focusUser;
-	}
-
-	public void setFocusUser(User focusUser) {
-		this.focusUser = focusUser;
-	}
 }

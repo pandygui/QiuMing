@@ -103,9 +103,10 @@ public class UserDao implements CommonDao {
 	}
 
 	public User findByName(String username) {
-		return JDBCTools.findByColumnName(JDBCTools.getConnect(), 
+		List<User> us = JDBCTools.findByColumnName(JDBCTools.getConnect(), 
 				"user", "username", username,
 				User.class);
+		return us != null && us.size() != 0 ? us.get(0) : null;
 	}
 
 	@Override
@@ -176,12 +177,13 @@ public class UserDao implements CommonDao {
 
 	@Override
 	public Object findById(long id) {
-		return JDBCTools.findById(JDBCTools.getConnect(), "user", id, User.class);
+		User user = JDBCTools.findById(JDBCTools.getConnect(), "user", id, User.class);
+		
+		if(user != null) {
+			// TODO 移除重要的字段
+			user.setPassword("");
+		}
+		return user;
 	}
 
-	@Override
-	public List<Object> findAll(Object... args) {
-		// TODO
-		return null;
-	}
 }

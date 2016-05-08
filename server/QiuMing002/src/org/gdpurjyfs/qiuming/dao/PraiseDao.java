@@ -96,10 +96,4 @@ public class PraiseDao implements CommonDao {
 		return null;
 	}
 	
-	// 某篇帖子的赞数，或者某个用户输出的赞数
-	@Override
-	public List<Object> findAll(Object... args) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

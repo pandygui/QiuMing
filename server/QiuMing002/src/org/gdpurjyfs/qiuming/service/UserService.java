@@ -15,23 +15,31 @@ public class UserService {
 	public UserService() {
 
 	}
-
-	// 修改信息
+	
+	/**
+	 * 修改信息
+	 ***/
 	public String modifyInfo(User user) {
 		return (String) this.dao.update(user);
 	}
 
-	// 修改密码
+	/**
+	 * 修改密码
+	 ***/
 	public String modifyPassword(User user, String newPassword) {
 		return dao.updatePassword(user);
 	}
 
-	// 用户注册
+	/**
+	 * 用户注册
+	 ***/
 	public String register(User user) {
 		return (String) dao.create(user);
 	}
 
-	// 用户登录
+	/**
+	 * 用户登录
+	 ***/
 	public String login(User user) {
 		User userObject = this.dao.findByName(user.getUsername());
 		if (userObject != null) {
@@ -48,13 +56,22 @@ public class UserService {
 		}
 	}
 
-	// 获取用户
+	/**
+	 * 获取用户
+	 ***/
 	public User getUserByName(String username) {
 		User user = dao.findByName(username);
 		if (user != null) {
 			user.setPassword("");
 		}
 		return user;
+	}
+	
+	/**
+	 * 查询是否有此用户
+	 ***/
+	public User getUserById(long userId) {
+		return (User)dao.findById(userId);
 	}
 
 }

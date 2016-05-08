@@ -1,7 +1,5 @@
 package org.gdpurjyfs.qiuming.dao;
 
-import java.util.List;
-
 import org.gdpurjyfs.qiuming.entity.Tag;
 import org.gdpurjyfs.qiuming.util.JDBCTools;
 import org.junit.Test;
@@ -74,11 +72,4 @@ public class TagDao implements CommonDao {
 	public Object update(Object entity) {
 		return null;
 	}
-
-	@Override
-	public List<Object> findAll(Object... args) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

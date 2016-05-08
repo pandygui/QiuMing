@@ -1,7 +1,5 @@
 package org.gdpurjyfs.qiuming.dao;
 
-import java.util.List;
-
 import org.gdpurjyfs.qiuming.entity.Letter;
 import org.gdpurjyfs.qiuming.util.JDBCTools;
 import org.junit.Test;
@@ -76,12 +74,6 @@ public class LetterDao implements CommonDao {
 	@Override
 	public Object findById(long id) {
 		return JDBCTools.findById(JDBCTools.getConnect(), "letter", id, Letter.class);
-	}
-
-	@Override
-	public List<Object> findAll(Object... args) {
-		// TODO 查看所有私信。。。
-		return null;
 	}
 
 }

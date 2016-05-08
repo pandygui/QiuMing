@@ -19,6 +19,7 @@ import org.gdpurjyfs.qiuming.entity.Praise;
 import org.gdpurjyfs.qiuming.entity.User;
 import org.gdpurjyfs.qiuming.service.PostService;
 import org.gdpurjyfs.qiuming.service.UserService;
+import org.gdpurjyfs.qiuming.util.ActionTools;
 
 //import org.junit.Test;
 
@@ -27,6 +28,7 @@ public class ActionFilter {
 
 	private UserAction userAction = new UserAction();
 	private PostAction postAction = new PostAction();
+	private FriendAction friendAction = new FriendAction();
 	
 	public void filter(WebSocketServer server, String message,
 			WebSocketClient client) {
@@ -35,7 +37,7 @@ public class ActionFilter {
 		String actionString = (String) action.get("action");
 		if (actionString == null) {
 			System.out.println("action is null");
-			sendError(action, client);
+			ActionTools.sendError(action, client);
 		} else if (actionString.equals("login")) {
 			userAction.login(action, client);
 		} else if (actionString.equals("logout")) {
@@ -44,6 +46,8 @@ public class ActionFilter {
 			userAction.getUserPostList(action, client);
 		} else if (actionString.equals("createPost")) {
 			postAction.createPost(action, client);
+		} else if (actionString.equals("modifyPost")) {
+			postAction.modifyPost(action, client);
 		} else if (actionString.equals("checkUserParisePost")) {
 			postAction.checkUserParisePost(action, client);
 		} else if (actionString.equals("parisePost")) {
@@ -60,17 +64,8 @@ public class ActionFilter {
 			postAction.favoritePost(action, client); 
 		} else if(actionString.equals("getUserFavoriteList")) {
 			userAction.getUserFavoriteList(action, client); 
+		} else if(actionString.equals("getFriendList")) {
+			friendAction.getFriendList(action, client); 
 		} 
-	}
-
-	// 发送错误信息
-	private void sendError(JSONObject action, WebSocketClient client) {
-		HashMap<String, Object> obj = new HashMap<String, Object>();
-
-		obj.put("uuid", action.getString("uuid"));
-		obj.put("result", "ERROR");
-		obj.put("code", "-1");
-		obj.put("message", "没有 action 字段");
-		client.sendMessage(JSON.toJSONString(obj));
 	}
 }

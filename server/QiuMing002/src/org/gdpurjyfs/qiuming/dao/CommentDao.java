@@ -1,7 +1,5 @@
 package org.gdpurjyfs.qiuming.dao;
 
-import java.util.List;
-
 import org.gdpurjyfs.qiuming.entity.Comment;
 import org.gdpurjyfs.qiuming.util.JDBCTools;
 import org.junit.Test;
@@ -85,9 +83,4 @@ public class CommentDao implements CommonDao {
 		return null;
 	}
 
-	@Override
-	public List<Object> findAll(Object... args) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

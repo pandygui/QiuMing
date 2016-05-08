@@ -1,7 +1,5 @@
 package org.gdpurjyfs.qiuming.dao;
 
-import java.util.List;
-
 import org.gdpurjyfs.qiuming.entity.CarAboard;
 
 public class CarAboardDao implements CommonDao {
@@ -37,9 +35,4 @@ public class CarAboardDao implements CommonDao {
 		return null;
 	}
 
-	@Override
-	public List<Object> findAll(Object... args) {
-		// TODO Auto-generated method stub
-		return null;
-	}
 }

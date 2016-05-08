@@ -12,6 +12,11 @@ public class Friend {
 
 	}
 
+	public Friend(long userId, long focusUserId) {
+		this.userId = userId;
+		this.focusUserId = focusUserId;
+	}
+	
 	public long getId() {
 		return id;
 	}

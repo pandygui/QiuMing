@@ -141,10 +141,4 @@ public class FavoriteDao implements CommonDao {
 	public Object update(Object entity) {
 		return null;
 	}
-
-	// TODO 获取用户所有的收藏
-	@Override
-	public List<Object> findAll(Object... args) {
-		return null;
-	}
 }

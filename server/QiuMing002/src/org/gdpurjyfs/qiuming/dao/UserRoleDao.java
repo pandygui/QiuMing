@@ -1,7 +1,5 @@
 package org.gdpurjyfs.qiuming.dao;
 
-import java.util.List;
-
 import org.gdpurjyfs.qiuming.entity.UserRole;
 import org.gdpurjyfs.qiuming.util.JDBCTools;
 import org.junit.Test;
@@ -57,12 +55,6 @@ public class UserRoleDao implements CommonDao {
 	
 	@Override
 	public Object update(Object entity) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public List<Object> findAll(Object... args) {
 		// TODO Auto-generated method stub
 		return null;
 	}

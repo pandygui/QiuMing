@@ -109,7 +109,7 @@ public final class JDBCTools {
 		}
 	}
 
-	public static <T> T findByColumnName(Connection conn, String tableName,
+	public static <T> List<T> findByColumnName(Connection conn, String tableName,
 			String columnName, Object columnValue, Class<T> clazz) {
 		if (conn == null) {
 			// System.out.println("get Connect fail");
@@ -121,7 +121,7 @@ public final class JDBCTools {
 		Object[] params = { columnValue };
 
 		try {
-			return qr.query(conn, sql, new BeanHandler<T>(clazz), params);
+			return qr.query(conn, sql, new BeanListHandler<T>(clazz), params);
 		} catch (SQLException e) {
 			e.printStackTrace();
 			return null;
@@ -129,10 +129,13 @@ public final class JDBCTools {
 			JDBCTools.close(conn);
 		}
 	}
+	
+	
 
 	public static <T> T findById(Connection conn, String tableName, long id,
 			Class<T> clazz) {
-		return findByColumnName(conn, tableName, "id", id, clazz);
+		List<T> l =  findByColumnName(conn, tableName, "id", id, clazz);
+		return l != null && l.size() != 0 ? l.get(0) : null;
 	}
 
 	public static String update(Connection conn, String sqlString, Object[] args) {

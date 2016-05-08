@@ -177,12 +177,4 @@ public class PostDao implements CommonDao {
 				index, size,
 				Post.class);
 	}
-	
-
-	@Override
-	public List<Object> findAll(Object... args) {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
 }

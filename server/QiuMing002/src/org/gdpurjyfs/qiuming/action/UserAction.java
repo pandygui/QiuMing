@@ -12,6 +12,7 @@ import org.gdpurjyfs.qiuming.entity.Post;
 import org.gdpurjyfs.qiuming.entity.User;
 import org.gdpurjyfs.qiuming.service.PostService;
 import org.gdpurjyfs.qiuming.service.UserService;
+import org.gdpurjyfs.qiuming.util.ActionTools;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -96,9 +97,8 @@ public class UserAction {
 				obj.put("posts", new ArrayList<Post>());
 			}
 		} else {
-			obj.put("result", "ERROR");
-			obj.put("code", "-1");
-			obj.put("message", "请登录后操作");
+			ActionTools.needLogin(action, client);
+			return;
 		}
 		client.sendMessage(JSON.toJSONString(obj));
 	}
@@ -126,12 +126,10 @@ public class UserAction {
 				obj.put("code", "0");
 				obj.put("favorites", new ArrayList<Post>());
 			}
-		} else {
-			obj.put("result", "ERROR");
-			obj.put("code", "-1");
-			obj.put("message", "请登录后操作");
+		} else {			
+			ActionTools.needLogin(action, client);
+			return;
 		}
 		client.sendMessage(JSON.toJSONString(obj));
-	}
-	
+	}	
 }

@@ -15,6 +15,13 @@ public class Post {
 	private int state;				// 帖子审核状态，0 ： 不通过，1 ： 通过
 	private long roleId;			// 1 帖子 2 发车
 	
+	public Post(long userId, long postId, String title, String content) {
+		this.userId = userId;
+		this.id = postId;
+		this.title = title;
+		this.content = content;
+	}
+	
 	public Post(long userId, String title, String content) {
 		this.userId = userId;
 		this.title = title;
