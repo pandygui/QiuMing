@@ -26,12 +26,7 @@ public class CarDepartService {
 		// 4. 向 Complain 写入记录
 		// 5. 发送信息
 		
-		PostService postService = new PostService();
-		PostDao postDao = new PostDao();
-		Post post = (Post)postDao.findById(carDepart.getPostId());
-		postService.setPost(post);
-		postService.setUser(this.getUser());
-		return postService.complainPost();
+		return "";
 	}
 	
 	public String aboardCar() {

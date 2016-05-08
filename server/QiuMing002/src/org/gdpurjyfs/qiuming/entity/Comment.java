@@ -5,6 +5,7 @@ import java.util.Date;
 public class Comment {
 
 	private long id;
+	private long groundId;
 	private long postId;
 	private String content;
 	private long userId;
@@ -18,7 +19,13 @@ public class Comment {
 	public Comment(long postId) {
 		this.setPostId(postId);
 	}
-	
+	public long getGroundId() {
+		return groundId;
+	}
+
+	public void setGroundId(long groundId) {
+		this.groundId = groundId;
+	}
 	public long getId() {
 		return id;
 	}

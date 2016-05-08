@@ -41,6 +41,13 @@ public class CommentDao implements CommonDao {
 	
 	//--------------------------------------------------------------------
 	
+	// TODO
+	// 用来回复，暂时不做
+	// groundId, content, replyCommentId
+	public String replyComment(Comment comment) {
+		return null;
+	}
+	
 	@Override
 	public Object create(Object entity) {
 		if (entity != null && entity instanceof Comment) {
@@ -48,7 +55,7 @@ public class CommentDao implements CommonDao {
 
 			long userId = comment.getUserId();
 			long postId = comment.getPostId();
-			long replyCommentId = comment.getReplyCommentId();
+			long replyCommentId = comment.getReplyCommentId();		// 默认为零，直接评论帖子
 			String content = comment.getContent();
 
 			String sql = "INSERT INTO comment( userId, postId, replyCommentId, content) "

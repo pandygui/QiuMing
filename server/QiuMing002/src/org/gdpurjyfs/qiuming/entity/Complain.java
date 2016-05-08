@@ -15,6 +15,12 @@ public class Complain {
 		this.reason = "举报原因";
 	}
 	
+	public Complain(long userId, long postId, String reason) {
+		this.userId = userId;
+		this.postId = postId;
+		this.reason = reason;
+	}
+	
 	public long getId() {
 		return id;
 	}

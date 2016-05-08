@@ -29,6 +29,7 @@ public class PostService {
 	private PostDao postDao = new PostDao();
 	private PraiseDao praiseDao = new PraiseDao();
 	private FavoriteDao favoriteDao = new FavoriteDao();
+	private ComplainDao complainDao = new ComplainDao();
 
 	private Post post;
 	private User user;
@@ -174,43 +175,38 @@ public class PostService {
 		return (String) postDao.delete(postId);
 	}
 
+	/**
+	 * 举报帖子 
+	 * 1. 举报帖子
+	 * 2. 向管理员发送私信?
+	 ***/
 	// TODO 举报帖子
-	public String complainPost() {
-		// 1. 举报帖子
-		// 2. 向管理员发送私信
-		ComplainDao complainDao = new ComplainDao();
-		Complain complain = new Complain();
-		complain.setPostId(this.getPost().getId());
-		complain.setUserId(this.getUser().getId());
-		complain.setReason(this.getComplainReason());
-		String complainResult = (String) complainDao.create(complain);
-		if (complainResult.equals("SUCCESS")) {
-			LetterService letterServer = new LetterService();
-			Letter letter = new Letter();
-			letter.setContent("user" + this.getUser().getId()
-					+ this.getComplainReason());
-			letter.setSenderUserId(0); // 0 is System
-			letter.setReceiveUserId(1); // 1 is Admin
-			letterServer.setLetter(letter);
-			letterServer.sendLetter();
-		}
-
-		return "";
+	public String complainPost(long userId, long postId, String reason) {
+		return (String) complainDao.create(new Complain(userId, postId, reason));
+//			LetterService letterServer = new LetterService();
+//			Letter letter = new Letter();
+//			letter.setContent("user" + this.getUser().getId()
+//					+ this.getComplainReason());
+//			letter.setSenderUserId(0); // 0 is System
+//			letter.setReceiveUserId(1); // 1 is Admin
+//			letterServer.setLetter(letter);
+//			letterServer.sendLetter();
+		
 	}
 
 	// TODO 帖子贴标签 或者消除标签
-	public String tagPost() {
+	public String tagPost(long userId, long postId, String tagName) {
 		// 1. 添加或者删除帖子标签的赞数
 		// 2. 修改帖子的赞数字段
 		TagDao tagDao = new TagDao();
 		Tag tag = new Tag();
-		tag.setPostId(this.getPost().getId());
+		tag.setPostId(postId);
 		tag.setTagName(tagName);
-		tag.setUserId(this.getUser().getId());
+		tag.setUserId(userId);
 		String tagResult = (String) tagDao.create(tag);
 		if (tagResult.equals("SUCCESS")) {
 			PostDao postDao = new PostDao();
-			Post post = (Post) postDao.findById(this.getPost().getId());
+			Post post = (Post) postDao.findById(postId);
 			if (post != null) {
 				post.setPraiseNumber(post.getPraiseNumber() - 1);
 				postDao.update(post);
@@ -249,43 +245,4 @@ public class PostService {
 
 	// -------------------------------------------------
 
-	public Post getPost() {
-		return post;
-	}
-
-	public void setPost(Post post) {
-		this.post = post;
-	}
-
-	public User getUser() {
-		return user;
-	}
-
-	public void setUser(User user) {
-		this.user = user;
-	}
-
-	public String getTagName() {
-		return tagName;
-	}
-
-	public void setTagName(String tag) {
-		this.tagName = tag;
-	}
-
-	public String getFavoriteName() {
-		return favoriteName;
-	}
-
-	public void setFavoriteName(String favoriteName) {
-		this.favoriteName = favoriteName;
-	}
-
-	public String getComplainReason() {
-		return complainReason;
-	}
-
-	public void setComplainReason(String complainReason) {
-		this.complainReason = complainReason;
-	}
 }

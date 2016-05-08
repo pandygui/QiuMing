@@ -48,7 +48,9 @@ public class ActionFilter {
 			postAction.createPost(action, client);
 		} else if (actionString.equals("modifyPost")) {
 			postAction.modifyPost(action, client);
-		} else if (actionString.equals("checkUserParisePost")) {
+		} else if (actionString.equals("complainPost")) {
+			postAction.complainPost(action, client);
+		}  else if (actionString.equals("checkUserParisePost")) {
 			postAction.checkUserParisePost(action, client);
 		} else if (actionString.equals("parisePost")) {
 			postAction.parisePost(action, client);

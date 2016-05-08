@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import org.gdpurjyfs.qiuming.api.WebSocketClient;
+import org.gdpurjyfs.qiuming.dao.CommentDao;
 import org.gdpurjyfs.qiuming.dao.CommonDao;
 import org.gdpurjyfs.qiuming.entity.Favorite;
 import org.gdpurjyfs.qiuming.entity.Post;
@@ -274,6 +275,39 @@ public class PostAction {
 			} else {
 				ActionTools.needLogin(action, client);
 			}
+		} else {
+			ActionTools.needLogin(action, client);
+		}
+	}
+	
+	/**
+	 * 举报帖子
+	 ***/
+	public void complainPost(JSONObject action, WebSocketClient client) {
+		// postId , title, content
+		System.out.println("action complainPost");
+		HashMap<String, Object> obj = ActionTools.getMessageMap(action);
+		
+		long postId = action.getLongValue("postId");
+		String reason = action.getString("reason");
+		
+		if (client.getUser() != null) {
+			String result = postService.complainPost(client.getUser().getId(),
+					postId, reason);
+			obj.put("result", result);
+			if(result.equals(CommonDao.SUCCESS)) {
+				obj.put("code", 0);
+				
+				// TODO 发送私信
+				
+			} else if(result.equals(CommentDao.DUPLICATE)) {
+				obj.put("code", -2);
+				obj.put("message","重复举报");
+			} else {
+				obj.put("code", -1);
+				obj.put("message","举报失败");
+			}
+			client.sendMessage(JSON.toJSONString(obj));
 		} else {
 			ActionTools.needLogin(action, client);
 		}
