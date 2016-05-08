@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50629
 File Encoding         : 65001
 
-Date: 2016-05-08 13:35:19
+Date: 2016-05-08 15:53:17
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -58,6 +58,7 @@ INSERT INTO `car_depart` VALUES ('1', '4', '0', '1');
 DROP TABLE IF EXISTS `comment`;
 CREATE TABLE `comment` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
+  `groundId` int(11) DEFAULT '0' COMMENT '评论组，和 replyCommentId 配套使用',
   `postId` int(11) NOT NULL COMMENT '帖子 id',
   `content` varchar(200) NOT NULL DEFAULT '# 评论使用markdown' COMMENT '评论使用markdown @ 来处理用户提示的',
   `userId` int(11) NOT NULL COMMENT '用户 id',
@@ -70,12 +71,12 @@ CREATE TABLE `comment` (
 -- ----------------------------
 -- Records of comment
 -- ----------------------------
-INSERT INTO `comment` VALUES ('1', '1', '自己评论自己的第一篇帖子', '1', '0', null);
-INSERT INTO `comment` VALUES ('9', '4', '回复某个评论', '2', '2', '2016-05-03 21:21:31');
-INSERT INTO `comment` VALUES ('8', '4', '第一评论', '2', '0', '2016-05-03 21:21:31');
-INSERT INTO `comment` VALUES ('10', '4', '第一评论', '2', '0', '2016-05-05 14:29:24');
-INSERT INTO `comment` VALUES ('12', '4', '第一评论', '2', '0', '2016-05-05 14:29:40');
-INSERT INTO `comment` VALUES ('13', '4', '回复某个评论', '2', '2', '2016-05-05 14:29:40');
+INSERT INTO `comment` VALUES ('1', '0', '1', '自己评论自己的第一篇帖子', '1', '0', null);
+INSERT INTO `comment` VALUES ('9', '0', '4', '回复某个评论', '2', '2', '2016-05-03 21:21:31');
+INSERT INTO `comment` VALUES ('8', '0', '4', '第一评论', '2', '0', '2016-05-03 21:21:31');
+INSERT INTO `comment` VALUES ('10', '0', '4', '第一评论', '2', '0', '2016-05-05 14:29:24');
+INSERT INTO `comment` VALUES ('12', '0', '4', '第一评论', '2', '0', '2016-05-05 14:29:40');
+INSERT INTO `comment` VALUES ('13', '0', '4', '回复某个评论', '2', '2', '2016-05-05 14:29:40');
 
 -- ----------------------------
 -- Table structure for `complain`
