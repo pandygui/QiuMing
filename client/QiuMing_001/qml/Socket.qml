@@ -158,6 +158,7 @@ Item {
     }
 
     function getPostList(index, size, callable, err) {
+        console.debug("action getPostList")
         callable = callable || function(messageObj) {
             console.log(JSON.stringify(messageObj));
         };
@@ -215,6 +216,25 @@ Item {
         };
         var action = {
             "action": "createPost",
+            "title": title,
+            "content": content,
+        };
+        send(action, callable, err);
+    }
+
+    // 由于用户登录了，是在服务端记录登陆状态的，所以在客户端只管发送请求
+    // 修改帖子，还要传入 userId
+    function modifyPost(userId, postId , title, content, callable, err) {
+        callable = callable || function(messageObj) {
+            console.log(JSON.stringify(messageObj));
+        };
+        err = err || function(message) {
+            console.log(message)
+        };
+        var action = {
+            "action": "modifyPost",
+            "userId": userId,
+            "postId": postId,
             "title": title,
             "content": content,
         };
@@ -308,6 +328,22 @@ Item {
         var action = {
             "action": "getUserFavoriteList",
             "favoriteName":favoriteName,
+        };
+        send(action, callable, err);
+    }
+
+    // 由于用户登录了，是在服务端记录登陆状态的，所以在客户端只管发送请求
+    // 一次性获取用户所有关注用户
+    function getFriendList(callable, err) {
+        console.debug("action : getUserFavoriteList")
+        callable = callable || function(messageObj) {
+            console.log(JSON.stringify(messageObj));
+        };
+        err = err || function(message) {
+            console.log(message)
+        };
+        var action = {
+            "action": "getFriendList",
         };
         send(action, callable, err);
     }

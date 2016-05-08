@@ -6,13 +6,14 @@ import QtQuick.Layouts 1.1
 
 import "../Component"
 
-/*
- * 查看帖子 收藏帖子 点赞帖子 删除帖子 举报帖子 帖子贴标签 赞同帖子的标签
- */
-
 Page {
     id: page
+    title: qsTr("修改帖子")
     backNavigationEnabled: true
+
+    property string     postId
+    property alias      postTitle   :      titleEdit.text
+    property alias      postContent :      textEdit.text
 
     Item {
         anchors.fill: parent
@@ -94,30 +95,7 @@ Page {
                 AppButton {
                     text: "发布"
                     onClicked: {
-                        var __handle = function(messageObj) {
-                            if(messageObj["result"] === "SUCCESS") {
-                                console.log("发帖成功了");
-                                busyDialog.exec("发帖成功了","发帖成功了");
-
-                            } else {
-                                console.log("发帖出错了:" + messageObj["message"]);
-                                busyDialog.exec("发帖出错了",messageObj["message"]);
-                            }
-                        }
-                        if(textEdit.text != "" ) {
-                            if(titleEdit.text != "") {
-                                if(textEdit.text.length > 4096) {
-                                    busyDialog.exec("发帖失败","文章太长啦");
-                                } else {
-                                    socket.createPost(titleEdit.text,textEdit.text, __handle);
-                                }
-                            } else {
-                                busyDialog.exec("标题为空","");
-                            }
-                        } else {
-                            console.debug("内容为空");
-                            busyDialog.exec("内容为空","");
-                        }
+                        __modifyPost();
                     }
                 }
                 AppButton {
@@ -140,6 +118,23 @@ Page {
         }
     }
 
+
+    function __modifyPost() {
+        var _handle  = function(messageObj) {
+            if(messageObj["result"] === "SUCCESS") {
+                busyDialog.exec("修改成功", "修改成功")
+                busyDialog.positiveActionLabel = "好的";
+                console.debug("修改成功");
+            } else if(messageObj["result"] === "NONE") {
+                busyDialog.exec("没有这篇文章", "没有这篇文章");
+                console.debug("没有这篇文章");
+            } else {
+                busyDialog.exec("未知错误", "未知错误");
+                console.debug("未知错误");
+            }
+        }
+        socket.modifyPost(userEntity.userId, postId, postTitle, postContent, _handle);
+    }
 
     Component.onCompleted: {
         textEdit.forceActiveFocus();

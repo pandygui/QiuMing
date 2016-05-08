@@ -91,8 +91,7 @@ Page {
                 model: postItem.posts
                 delegate: PostItemDelegate {
                     id: itemDelegate
-
-                    width: parent.width
+                    anchors.horizontalCenter: parent.horizontalCenter
                     onClicked: {
                         console.log("post id:"+itemDelegate.postId);
                         var properties = {
@@ -119,7 +118,7 @@ Page {
             title: qsTr("关注")
             icon: IconType.users
 
-            FocusPage { }
+            FriendsPage { }
         }
         NavigationItem {
             title: qsTr("收藏")

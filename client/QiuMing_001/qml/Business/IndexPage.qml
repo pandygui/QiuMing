@@ -69,8 +69,8 @@ ListPage {
 
     delegate: PostItemDelegate {
         id: itemDelegate
+        anchors.horizontalCenter: parent.horizontalCenter
 
-        width: parent.width
         onClicked: {
             console.log("post id:"+itemDelegate.postId);
             var properties = {

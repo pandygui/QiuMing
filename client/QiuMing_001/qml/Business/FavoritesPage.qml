@@ -14,8 +14,8 @@ ListPage {
     emptyText.text: qsTr("收藏夹为空")
     delegate: PostItemDelegate {
         id: itemDelegate
+        anchors.horizontalCenter: parent.horizontalCenter
 
-        width: parent.width
         onClicked: {
             // console.log("post id:"+itemDelegate.postId);
             var properties = {
@@ -39,16 +39,20 @@ ListPage {
         PostViewPage { }
     }
 
+    listView.headerPositioning: ListView.OverlayHeader
     listView.spacing: dp(8)
 
-    listView.footer: VisibilityRefreshHandler {
+
+    PullToRefreshHandler {
+        listView: page.listView
         onRefresh:{
-            defaultAppActivityIndicatorVisible = true;
+            refreshing = true;
             __loadFavoriteList("默认收藏夹", function(){
-                defaultAppActivityIndicatorVisible = false;
+                refreshing = false;
             });
         }
     }
+
 
     function __loadFavoriteList(favoriteName, callable) {
         callable = callable || function(){ };
@@ -56,7 +60,8 @@ ListPage {
             if(messageObj["result"] === "SUCCESS") {
                 page.model = messageObj["favorites"];
             } else {
-                console.debug("__loadFavoriteList error:", JSON.stringify(messageObj));
+                console.debug("__loadFavoriteList error:",
+                              JSON.stringify(messageObj));
             }
             callable();
         };

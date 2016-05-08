@@ -6,6 +6,7 @@ import QtQuick.Layouts 1.1
 
 /*
  * 查看帖子 收藏帖子 点赞帖子 删除帖子 举报帖子 帖子贴标签 赞同帖子的标签
+ * 获取此帖作者
  */
 
 Page {
@@ -26,6 +27,11 @@ Page {
 
     property bool       __pariseThisPost: false       // 使用本应用的用户是否点赞了此篇帖子
     property bool       __favoriteThisPost: false     // 使用本应用的用户是否收藏了此篇帖子
+
+    Component {
+        id: modifyPostPageCom
+        ModifyPostPage { }
+    }
 
     Item {
         anchors.fill: parent
@@ -96,7 +102,7 @@ Page {
                         text: pariseNumber
                     }
                 }
-                 //IconType{}
+                // IconType{}
                 // 收藏
                 IconButton {
                     id: favoriteButton
@@ -109,6 +115,30 @@ Page {
                     selectedColor: Theme.listItem.activeTextColor
 
                     onClicked: __toggleStar();
+                }
+
+                // 修改
+                IconButton {
+                    id: editButton
+                    icon: IconType.pencilsquareo
+                    selectedIcon: IconType.pencilsquare
+
+                    color: Theme.listItem.activeTextColor
+                    selectedColor: Theme.listItem.activeTextColor
+
+                    visible: userEntity.userId === author
+
+                    onClicked: {
+//                        console.log("userEntity uesrId:", userEntity.userId )
+//                        console.log("author :", author);
+
+                        var properties = {
+                            "postId"      :      postId,
+                            "postTitle"   :      title,
+                            "postContent" :      content,
+                        }
+                        mainStack.push(modifyPostPageCom, properties);
+                    }
                 }
             }
         }
@@ -206,7 +236,7 @@ Page {
         };
 
         var _handle2 = function(messageObj) {
-            console.log("back uuid:", messageObj["uuid"]);
+            // console.log("back uuid:", messageObj["uuid"]);
             if(messageObj["result"] === "SUCCESS") {
                 // 已经收藏过
                 __favoriteThisPost = true;

@@ -42,7 +42,8 @@ App {
         Theme.navigationAppDrawer.textColor = "#ababab";
         Theme.navigationAppDrawer.activeTextColor = "#b06176"
         Theme.listItem.activeTextColor = "#b06176";
-        Theme.listItem.backgroundColor = "transparent";
+        // Theme.listItem.backgroundColor = "transparent";
+        Theme.listItem.backgroundColor = "#343434";
         // activeTextColor
 
         //        // listItem ThemeSimpleRow
@@ -192,6 +193,8 @@ App {
                                 indexPage.postsSize = 10;
                                 // TODO 确保 model 使用给数组！
                                 indexPage.model = [];
+                                // 清空用户数据
+                                userEntity.clear();
                             }
                         }
 
@@ -207,7 +210,7 @@ App {
                 NavigationItem {
                     title: qsTr("关注的人")
                     icon: IconType.users
-                    FocusPage { }
+                    FriendsPage { }
                 }
 
                 NavigationItem {

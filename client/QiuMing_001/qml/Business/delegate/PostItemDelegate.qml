@@ -27,14 +27,18 @@ Rectangle {
     property string userId              : item && item.userId
     property string modifyTime          : item && item.modifyTime           //
 
-    width: parent.width
+    width: parent.width * 0.9
 
     height: column.childrenRect.height
 
     Column {
         id: column
-        width: parent.width
+        width: parent.width * 0.95
+        anchors.horizontalCenter: parent.horizontalCenter
         spacing: dp(5)
+
+        Item { height: dp(1) ; width: parent.width }
+
         AppText {
             width: parent.width
             text: itemDelegate.title
@@ -58,6 +62,8 @@ Rectangle {
             elide: Text.ElideRight
             font.pixelSize: sp(12)
         }
+
+        Item { height: dp(1) ; width: parent.width }
     }
 
     RippleMouseArea {
