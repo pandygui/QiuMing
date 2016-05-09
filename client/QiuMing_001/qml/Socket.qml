@@ -142,7 +142,7 @@ Item {
 
 
     // 由于用户登录了，是在服务端记录登陆状态的，所以在客户端只管发送请求
-    function getUserPostList(index, size, callable, err) {
+    function getUserPostList(userId, index, size, callable, err) {
         callable = callable || function(messageObj) {
             console.log(JSON.stringify(messageObj));
         };
@@ -151,6 +151,7 @@ Item {
         };
         var action = {
             "action": "getUserPostList",
+            "userId": userId,
             "index": index,
             "size": size,
         };
@@ -317,8 +318,8 @@ Item {
 
     // 由于用户登录了，是在服务端记录登陆状态的，所以在客户端只管发送请求
     // 获取用户 favoriteName 收藏夹下所有的帖子
-    function getUserFavoriteList(favoriteName, callable, err) {
-        console.debug("action : getUserFavoriteList")
+    function getUserFavoriteList(userId, favoriteName, callable, err) {
+        console.debug("action : getUserFavoriteList userId", userId)
         callable = callable || function(messageObj) {
             console.log(JSON.stringify(messageObj));
         };
@@ -328,14 +329,15 @@ Item {
         var action = {
             "action": "getUserFavoriteList",
             "favoriteName":favoriteName,
+            "userId":userId,
         };
         send(action, callable, err);
     }
 
     // 由于用户登录了，是在服务端记录登陆状态的，所以在客户端只管发送请求
     // 一次性获取用户所有关注用户
-    function getFriendList(callable, err) {
-        console.debug("action : getUserFavoriteList")
+    function getFriendList(userId, callable, err) {
+        console.debug("action : getFriendList userId", userId)
         callable = callable || function(messageObj) {
             console.log(JSON.stringify(messageObj));
         };
@@ -344,6 +346,7 @@ Item {
         };
         var action = {
             "action": "getFriendList",
+            "userId": userId,
         };
         send(action, callable, err);
     }

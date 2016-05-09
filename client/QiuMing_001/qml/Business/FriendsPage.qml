@@ -4,7 +4,10 @@ import QtQuick 2.0
 import QtQuick.Layouts 1.1
 
 ListPage {
-    id: page
+    id: friendsPage
+
+    property string userId
+
     title: qsTr("关注的人")
     backNavigationEnabled: true
     emptyText.text: qsTr("太宅了以至于没有关注的人")
@@ -40,7 +43,7 @@ ListPage {
     listView.headerPositioning: ListView.OverlayHeader
 
     PullToRefreshHandler {
-        listView: page.listView
+        listView: friendsPage.listView
         // pullToRefreshEnabled: page.listView.contentY < 0
         onRefresh:{
             refreshing = true;
@@ -119,7 +122,7 @@ ListPage {
 
             callable();
         };
-        socket.getFriendList(_callable);
+        socket.getFriendList(friendsPage.userId, _callable);
     }
 
     Component.onCompleted: {

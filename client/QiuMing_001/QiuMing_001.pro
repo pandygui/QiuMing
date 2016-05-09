@@ -43,4 +43,3 @@ macx {
 }
 
 DISTFILES += \
-    qml/Business/FriendsPage.qml

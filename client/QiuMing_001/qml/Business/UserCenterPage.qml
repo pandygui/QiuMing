@@ -8,7 +8,9 @@ import "../Component"
 import "./delegate"
 
 Page {
-    id: page
+    id: userCenterPage
+
+    property string userId
 
     title: qsTr("用户中心")
     backNavigationEnabled: true
@@ -57,7 +59,7 @@ Page {
 
 
     Component.onCompleted: {
-        socket.getUserPostList(0, 10,function(messageObj){
+        socket.getUserPostList(userCenterPage.userId, 0, 10,function(messageObj){
             if(messageObj["result"] === "SUCCESS") {
                 // console.debug(JSON.stringify(messageObj));
                 postItem.posts = messageObj["posts"];
@@ -118,13 +120,13 @@ Page {
             title: qsTr("关注")
             icon: IconType.users
 
-            FriendsPage { }
+            FriendsPage { userId: userCenterPage.userId }
         }
         NavigationItem {
             title: qsTr("收藏")
             icon: IconType.star
 
-            FavoritesPage { }
+            FavoritesPage { userId: userCenterPage.userId }
         }
         NavigationItem {
             title: qsTr("私信")

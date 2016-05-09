@@ -6,7 +6,7 @@ import QtQuick.Layouts 1.1
 import "../Component"
 
 Page {
-    id: page
+    id: userLoginPage
     backNavigationEnabled: false
 
     signal loginSuccess()
@@ -19,9 +19,9 @@ Page {
         RowLayout {
             width: parent.width
             Image {
-                height: page.width * 0.3
-                width: page.width * 0.3
-                sourceSize: Qt.size(page.width * 0.3, page.width * 0.3)
+                height: userLoginPage.width * 0.3
+                width: userLoginPage.width * 0.3
+                sourceSize: Qt.size(userLoginPage.width * 0.3, userLoginPage.width * 0.3)
                 Layout.alignment: Qt.AlignLeft
                 source: password.activeFocus ? "../../assets/login/left-mask.png" : "../../assets/login/left.png"
                 RippleMouseArea {
@@ -35,9 +35,9 @@ Page {
             }
             Item { Layout.fillWidth: true }
             Image {
-                height: page.width * 0.3
-                width: page.width * 0.3
-                sourceSize: Qt.size(page.width * 0.3, page.width * 0.3)
+                height: userLoginPage.width * 0.3
+                width: userLoginPage.width * 0.3
+                sourceSize: Qt.size(userLoginPage.width * 0.3, userLoginPage.width * 0.3)
                 Layout.alignment: Qt.AlignRight
                 source: password.activeFocus ? "../../assets/login/right-mask.png" : "../../assets/login/right.png"
             }

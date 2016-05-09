@@ -7,7 +7,7 @@ import QtQuick.Layouts 1.1
 import "../Component"
 
 Page {
-    id: page
+    id: modifyPostPage
     title: qsTr("修改帖子")
     backNavigationEnabled: true
 
@@ -68,8 +68,8 @@ Page {
                         anchors.topMargin: dp(16)
                         anchors.horizontalCenter: parent.horizontalCenter
 
-                        width: page.width - 2 * dp(16)
-                        height: Math.max(textEdit.contentHeight, page.height * 0.9)
+                        width: modifyPostPage.width - 2 * dp(16)
+                        height: Math.max(textEdit.contentHeight, modifyPostPage.height * 0.9)
                         wrapMode: TextEdit.WrapAnywhere
 
                         selectByMouse: true

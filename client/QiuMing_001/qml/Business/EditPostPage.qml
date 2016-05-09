@@ -11,7 +11,7 @@ import "../Component"
  */
 
 Page {
-    id: page
+    id: editPostPage
     backNavigationEnabled: true
 
     Item {
@@ -67,8 +67,8 @@ Page {
                         anchors.topMargin: dp(16)
                         anchors.horizontalCenter: parent.horizontalCenter
 
-                        width: page.width - 2 * dp(16)
-                        height: Math.max(textEdit.contentHeight, page.height * 0.9)
+                        width: editPostPage.width - 2 * dp(16)
+                        height: Math.max(textEdit.contentHeight, editPostPage.height * 0.9)
                         wrapMode: TextEdit.WrapAnywhere
 
                         selectByMouse: true

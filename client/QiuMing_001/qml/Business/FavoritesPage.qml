@@ -6,7 +6,10 @@ import QtQuick.Layouts 1.1
 import "./delegate"
 
 ListPage {
-    id: page
+    id: favoritesPage
+
+    property string userId
+
     model: []
     title: qsTr("收藏夹")
 
@@ -44,7 +47,7 @@ ListPage {
 
 
     PullToRefreshHandler {
-        listView: page.listView
+        listView: favoritesPage.listView
         onRefresh:{
             refreshing = true;
             __loadFavoriteList("默认收藏夹", function(){
@@ -58,14 +61,14 @@ ListPage {
         callable = callable || function(){ };
         var _handle = function(messageObj) {
             if(messageObj["result"] === "SUCCESS") {
-                page.model = messageObj["favorites"];
+                favoritesPage.model = messageObj["favorites"];
             } else {
                 console.debug("__loadFavoriteList error:",
                               JSON.stringify(messageObj));
             }
             callable();
         };
-        socket.getUserFavoriteList(favoriteName, _handle);
+        socket.getUserFavoriteList(favoritesPage.userId, favoriteName, _handle);
     }
 
 

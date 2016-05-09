@@ -6,7 +6,7 @@ import QtQuick.Layouts 1.1
 import "./delegate"
 
 ListPage {
-    id: page
+    id: indexPage
     backNavigationEnabled: true
     emptyText.text: qsTr("首页")
 
@@ -29,8 +29,8 @@ ListPage {
             // 1. 先获取本次页面中的帖子数量
             // 2. 计算得出下一次请求的页面，size
             // 3. 如果获取到的是空，就提示用户，没有更多内容了。
-            var pos = page.listView.getScrollPosition() //retrieve scroll position data
-            var startIndex = page.model.length;
+            var pos = indexPage.listView.getScrollPosition() //retrieve scroll position data
+            var startIndex = indexPage.model.length;
             postIndex = startIndex;
             console.debug("继续加载旧的");
 
@@ -41,12 +41,12 @@ ListPage {
                     var newPosts =  messageObj["posts"];
                     if(newPosts.length !== 0) {
                         for(var iter in newPosts) {
-                            page.model.push(newPosts[iter]);
+                            indexPage.model.push(newPosts[iter]);
                             // 要主动通知视图
                             // 或者自行设计一个 ListModel
-                            page.modelChanged();
+                            indexPage.modelChanged();
                             // 然后让 ListView 移动到startIndex
-                            page.listView.restoreScrollPosition(pos) //scrolls to the previous position
+                            indexPage.listView.restoreScrollPosition(pos) //scrolls to the previous position
                         }
                     } else {
                         console.debug("没有更多的帖子了");
@@ -97,7 +97,7 @@ ListPage {
     function loadPosts(postIndex, postsSize) {
         var _getPosts = function(messageObj) {
             if(messageObj["result"] === "SUCCESS") {
-                page.model = messageObj["posts"];
+                indexPage.model = messageObj["posts"];
                 console.log("装载成功：length", messageObj["posts"].length, "postIndex:",postIndex, "postsSize:", postsSize)
             } else {
                 console.debug("装载失败：", JSON.stringify(messageObj));
