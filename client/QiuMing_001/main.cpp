@@ -2,11 +2,16 @@
 #include <VPApplication>
 
 #include <QQmlApplicationEngine>
-
+#include <QtQml>
+#include <src/hoedown/hoedownmarkdownconverter.h>
 
 int main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
+
+    // @uri org.gdpurjyfs.markdown
+    qmlRegisterType<HoedownMarkdownConverter>("org.gdpurjyfs.markdown", 1, 0, "HoedownMarkdownConverter");
+
     VPApplication vplay;
 
     // Use platform-specific fonts instead of V-Play's default font

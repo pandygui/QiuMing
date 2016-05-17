@@ -6,6 +6,8 @@ import QtQuick.Layouts 1.1
 
 import "../Component"
 
+import org.gdpurjyfs.markdown 1.0
+
 /*
  * 查看帖子 收藏帖子 点赞帖子 删除帖子 举报帖子 帖子贴标签 赞同帖子的标签
  * 获取此帖作者
@@ -34,6 +36,10 @@ Page {
 //        id: userCenterPageCom
 //        url: "./UserCenterPage.qml"
 //    }
+
+    HoedownMarkdownConverter{
+        id: converter
+    }
 
     rightBarItem: NavigationBarRow {
         //      ActivityIndicatorBarItem {
@@ -113,6 +119,7 @@ Page {
                 color: "#434343"
                 AppText {
                     id: contentView
+                    baseUrl: "."
 
                     anchors.top: parent.top
                     anchors.topMargin: dp(16)
@@ -123,9 +130,9 @@ Page {
                     wrapMode: TextEdit.WrapAnywhere
 
                     elide: Text.ElideNone
-                    text: postViewPage.content
+                    text: converter.markdown2html(postViewPage.content)
+                    textFormat: Text.RichText
                     verticalAlignment: TextEdit.AlignTop
-
                 }
             }
         }
