@@ -105,7 +105,7 @@ Page {
         ScrollView {
             id: scrollView
             anchors.fill: parent
-            anchors.bottomMargin: dp(55)
+            anchors.bottomMargin: dp(48)
             horizontalScrollBarPolicy: Qt.ScrollBarAlwaysOff
             verticalScrollBarPolicy: Qt.ScrollBarAlwaysOff
             // verticalScrollBarPolicy: Qt.ScrollBarAlwaysOff
@@ -119,6 +119,12 @@ Page {
                 color: "#434343"
                 AppText {
                     id: contentView
+
+                    FontMetrics {
+                        id: fontMetrics
+                        font: contentView.font
+                    }
+
                     baseUrl: "."
 
                     anchors.top: parent.top
@@ -126,7 +132,7 @@ Page {
                     anchors.horizontalCenter: parent.horizontalCenter
 
                     width: postViewPage.width - 2 * dp(16)
-                    height: Math.max(contentView.contentHeight, postViewPage.height * 0.9)
+                    height: Math.max(contentView.contentHeight + fontMetrics.height, postViewPage.height * 0.9)
                     wrapMode: TextEdit.WrapAnywhere
 
                     elide: Text.ElideNone
@@ -142,7 +148,7 @@ Page {
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
             width: parent.width
-            height: dp(56)
+            height: dp(48)
             color: "#434343"
 
             Row {

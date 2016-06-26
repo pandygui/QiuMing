@@ -24,8 +24,11 @@ App {
     // Theme {}
     onInitTheme: {
 
-//        Theme.platform = "windows";
-        console.log(Theme.platform)
+//        console.log(Theme.platform)
+
+//        if(Qt.platform.os !== "windows") {
+//            Theme.platform = "windows";
+//        }
 
         // 设置主字体颜色
         Theme.colors.textColor = "#ababab";

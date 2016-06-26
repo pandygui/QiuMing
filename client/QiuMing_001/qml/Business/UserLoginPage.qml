@@ -53,13 +53,6 @@ Page {
             text: "qyvlik"
         }
 
-        Rectangle {
-            anchors {
-                right: parent.right
-                left: parent.left
-            }
-            height: dp(1)
-        }
 
         AppTextField {
             id: password
@@ -69,16 +62,9 @@ Page {
             }
             showClearButton: true
             echoMode: TextInput.Password
-            text: "1403085871"
+            text: "123456"
         }
 
-        Rectangle {
-            anchors {
-                right: parent.right
-                left: parent.left
-            }
-            height: dp(1)
-        }
 
         Item {
             width: parent.width

@@ -12,7 +12,9 @@ Item {
 
     WebSocket {
         id: webSocket
+        // 172.19.137.1 --> 为本地 wifi
         url: "ws://localhost:8080/QiuMing002/websocket"
+        //url: "ws://172.19.137.1:8080/QiuMing002/websocket"
 
         onStatusChanged: {
             switch(status) {
@@ -27,19 +29,19 @@ Item {
                 break;
             case WebSocket.Closed :
                 console.debug("WebSocket status : Closed");
-//                interLazyer.lazyDo(3*1000, function(){
-//                    console.log("timeout and connect")
-//                    webSocket.active = false;
-//                    webSocket.active = true;
-//                })
+                //                interLazyer.lazyDo(3*1000, function(){
+                //                    console.log("timeout and connect")
+                //                    webSocket.active = false;
+                //                    webSocket.active = true;
+                //                })
                 break;
             case WebSocket.Error :
                 console.debug("WebSocket status : Error");
-//                interLazyer.lazyDo(3*1000, function(){
-//                    console.log("timeout and connect")
-//                    webSocket.active = false;
-//                    webSocket.active = true;
-//                })
+                //                interLazyer.lazyDo(3*1000, function(){
+                //                    console.log("timeout and connect")
+                //                    webSocket.active = false;
+                //                    webSocket.active = true;
+                //                })
                 break;
             }
         }
@@ -351,4 +353,6 @@ Item {
         send(action, callable, err);
     }
 }
+
+
 

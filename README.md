@@ -10,7 +10,7 @@ Old driver drag racing.
 
 ## 如何使用
 
-1. 运行[这个 sql 文件](documents/sql/秋明数据库初始化.sql)，构建表和基本数据。
+1. 运行[这个 sql 文件](documents/sql/qiuming_test.sql)，构建表和基本数据。
 
 2. 将 `server` 目录下的 `QiuMing002` 文件添加到 `MyEclipse` 中，使用 `Tomcat` 部署这个项目（Tomcat 版本必须为 7 或以上版本，以便更好的支持 `websocket`）。
 

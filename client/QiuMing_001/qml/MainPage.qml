@@ -2,7 +2,6 @@ import VPlayApps 1.0
 
 import QtQuick 2.0
 import QtQuick.Layouts 1.1
-import Qt.WebSockets 1.0
 
 import QtQuick.Dialogs 1.2 as ZZZ
 

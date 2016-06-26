@@ -34,13 +34,13 @@ Page {
                 placeholderText: qsTr("请输入标题")
             }
 
-            Rectangle {
-                Layout.fillWidth: true
-                Layout.rightMargin: dp(16)
-                Layout.leftMargin: dp(16)
-                height: dp(1)
-                color: "#ccc"
-            }
+//            Rectangle {
+//                Layout.fillWidth: true
+//                Layout.rightMargin: dp(16)
+//                Layout.leftMargin: dp(16)
+//                height: dp(1)
+//                color: "#ccc"
+//            }
 
             ScrollView {
                 id: scrollView
