@@ -21,3 +21,7 @@ Old driver drag racing.
 ## 客户端效果图
 
 ![](documents/images/client/登陆.png)
+
+如下为客户端动态效果图：
+
+![](documents/images/client/effect.gif)
